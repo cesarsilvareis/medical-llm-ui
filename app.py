@@ -7,6 +7,8 @@ from streamlit.web.cli import main as strunner
 
 from langchain_core.prompts import PromptTemplate
 
+from resources import *
+
 @st.cache_data
 def prompting(task: str) -> PromptTemplate:
     with open('prompt.txt', 'r') as p:
@@ -23,6 +25,22 @@ def streamlit_app():
     )
 
     st.title("Encapsulating the Prompt Engineering for Medical Users")
+
+    task = MedicalTask(
+        name = "Test",
+        banana = 2,
+        language = "pt"
+    )
+
+    print(task)
+
+    task["audience"] = "patients"
+    task["audience"] = "nothing-here"
+    task["audience"] = "patients"
+
+    print(task["audience"], len(task))
+
+    # task.prompting("prompt.txt")
 
     result = None
 
