@@ -5,15 +5,11 @@ import streamlit as st
 from streamlit import runtime
 from streamlit.web.cli import main as strunner
 
-from langchain_core.prompts import PromptTemplate
-
 from resources import *
 
 @st.cache_data
-def prompting(task: str) -> PromptTemplate:
-    with open('prompt.txt', 'r') as p:
-        prompt = PromptTemplate.from_template(p.read().rstrip())    
-    return prompt
+def load_participant(target: PublicTarget) -> MedicalEndUser:
+    return MedicalEndUser(type=target)
 
 def streamlit_app():
 
@@ -30,6 +26,11 @@ def streamlit_app():
 
     with st.sidebar:
         st.write("Configuration:")
+
+        target = st.selectbox(
+            label="Public Target", 
+            options=list(PublicTarget)
+        )
 
         task = st.selectbox(label="Task", options=[
             "IE Guidelines Congress Slide Builder"
@@ -70,7 +71,9 @@ def streamlit_app():
 
             task["banana"] = 7
 
-            print(task)
+            task.save("test.json")
+
+            task = MedicalTask.load("test.json")
 
             prompt = MedicalTemplate("prompt.txt", task)
             print(prompt.build())

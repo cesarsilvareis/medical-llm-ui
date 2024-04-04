@@ -11,18 +11,18 @@
 from pathlib import Path
 from langchain_core.prompts import PromptTemplate
 
-from resources.task import MedicalTask
+from resources.domain.task import MedicalTask
 from resources.utils import print_message
 
 class MedicalTemplate():
 
     def __init__(self, source_file: Path, task: MedicalTask):
         self._task = task # with required variables
-        self.prompt = PromptTemplate.from_file(source_file)
+        self.prompt = PromptTemplate.from_file(f"resources/load/prompts/{source_file}")
 
     @property
     def id(self) -> str:
-        return self._task.name
+        return self._task._name
 
     def _check_prompt_validity(self):
         missing_variables = set(self._task) - set(self.prompt.input_variables)

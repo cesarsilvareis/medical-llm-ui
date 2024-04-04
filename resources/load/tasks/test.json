@@ -1,0 +1,72 @@
+{
+    "id": 1,
+    "name": "Test",
+    "properties": [
+        {
+            "name": "objective",
+            "value": "Inform possible changes on IE guidelines",
+            "type": "<class 'str'>",
+            "required": true
+        },
+        {
+            "name": "audience",
+            "value": "Physicians",
+            "type": "<class 'str'>",
+            "required": true
+        },
+        {
+            "name": "presenter_affiliation",
+            "value": "",
+            "type": "<class 'str'>",
+            "required": true
+        },
+        {
+            "name": "presenter_name",
+            "value": "",
+            "type": "<class 'str'>",
+            "required": true
+        },
+        {
+            "name": "duration",
+            "value": "0.0",
+            "type": "<class 'float'>",
+            "required": true
+        },
+        {
+            "name": "slide_time",
+            "value": "1",
+            "type": "<class 'int'>",
+            "required": true
+        },
+        {
+            "name": "banana",
+            "value": "7",
+            "type": "<class 'int'>",
+            "required": false
+        },
+        {
+            "name": "tone",
+            "value": "rigorous",
+            "type": "<class 'str'>",
+            "required": true
+        },
+        {
+            "name": "language",
+            "value": "English",
+            "type": "<class 'str'>",
+            "required": true
+        },
+        {
+            "name": "theme",
+            "value": "",
+            "type": "<class 'str'>",
+            "required": true
+        },
+        {
+            "name": "date_time",
+            "value": "2024-04-04",
+            "type": "<class 'datetime.date'>",
+            "required": true
+        }
+    ]
+}

@@ -9,7 +9,7 @@ from typing import Optional, Literal
 class ExtendedEnum(Enum):
 
     def __str__(self):
-        return str(self.name)
+        return self.name.lower().capitalize().replace("_", " ")
 
     @classmethod
     def count(cls: Enum) -> int:
