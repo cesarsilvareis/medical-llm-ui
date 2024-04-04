@@ -26,22 +26,6 @@ def streamlit_app():
 
     st.title("Encapsulating the Prompt Engineering for Medical Users")
 
-    task = MedicalTask(
-        name = "Test",
-        banana = 2,
-        language = "pt"
-    )
-
-    print(task)
-
-    task["audience"] = "patients"
-    task["audience"] = "nothing-here"
-    task["audience"] = "patients"
-
-    print(task["audience"], len(task))
-
-    # task.prompting("prompt.txt")
-
     result = None
 
     with st.sidebar:
@@ -50,8 +34,6 @@ def streamlit_app():
         task = st.selectbox(label="Task", options=[
             "IE Guidelines Congress Slide Builder"
         ])
-
-        prompt = prompting(task)
 
         st.divider()
         theme = st.text_input(label="Theme", value="", max_chars=25)
@@ -70,18 +52,28 @@ def streamlit_app():
         slide_time = st.number_input(label="Expected Slide Time (slides/min)", value=1)
 
         if st.button(label="Submit"):
-            result = prompt.invoke({
-                "theme": theme,
-                "presenter_name": presenter_name,
-                "presenter_affiliation": presenter_affiliation,
-                "date_time": date_time,
-                "objective": objective,
-                "audience": audience,
-                "tone": tone,
-                "language": language,
-                "duration": duration,
-                "slide_time": slide_time
-            }).to_string()
+            task = MedicalTask(
+                name = "Test",
+                **{
+                    "theme": theme,
+                    "presenter_name": presenter_name,
+                    "presenter_affiliation": presenter_affiliation,
+                    "date_time": date_time,
+                    "objective": objective,
+                    "audience": audience,
+                    "tone": tone,
+                    "language": language,
+                    "duration": duration,
+                    "slide_time": slide_time
+                }
+            )
+
+            task["banana"] = 7
+
+            print(task)
+
+            prompt = MedicalTemplate("prompt.txt", task)
+            print(prompt.build())
 
     # Prompt Placement
 
