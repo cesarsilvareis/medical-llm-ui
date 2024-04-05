@@ -83,6 +83,9 @@ class MedicalTask(MutableMapping):
             self.update(**required_inputs)
             self.to_detailed()
 
+    @property
+    def name(self):
+        return self._name
 
     def _find_property(self, name: str) -> Property|None:
         return next((p for p in self._properties if p.info[0] == name), None) # why is python using 'next' for sets???
@@ -141,6 +144,9 @@ class MedicalTask(MutableMapping):
     
     def __repr__(self) -> str:
         return str(self)
+
+    def __hash__(self) -> int:
+        return hash(self._name) + len(self)
 
     def save(self, save_file: str):
         with open(f"resources/load/tasks/{save_file}", 'w') as fp:

@@ -9,7 +9,10 @@ from resources import *
 
 @st.cache_data
 def load_participant(target: PublicTarget) -> MedicalEndUser:
-    return MedicalEndUser(type=target)
+    return MedicalEndUser(
+        type=target,
+        tasks=Loader().load_from_fs(target=target)
+    )
 
 def streamlit_app():
 
@@ -27,10 +30,14 @@ def streamlit_app():
     with st.sidebar:
         st.write("Configuration:")
 
-        target = st.selectbox(
+        target_profile = st.selectbox(
             label="Public Target", 
             options=list(PublicTarget)
         )
+
+        participant = load_participant(target_profile)
+
+        print(participant)
 
         task = st.selectbox(label="Task", options=[
             "IE Guidelines Congress Slide Builder"
@@ -69,14 +76,14 @@ def streamlit_app():
                 }
             )
 
-            task["banana"] = 7
+            # task["banana"] = 7
 
-            task.save("test.json")
+            # task.save("test.json")
 
-            task = MedicalTask.load("test.json")
+            # task = MedicalTask.load("test.json")
 
-            prompt = MedicalTemplate("prompt.txt", task)
-            print(prompt.build())
+            # prompt = MedicalTemplate("prompt.txt", task)
+            # print(prompt.build())
 
     # Prompt Placement
 

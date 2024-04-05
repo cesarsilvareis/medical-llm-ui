@@ -19,7 +19,7 @@ class PublicTarget(ExtendedEnum):
 
 class MedicalEndUser():
 
-    def __init__(self, type: PublicTarget, tasks: list[MedicalTask]):
+    def __init__(self, type: PublicTarget, tasks: set[MedicalTask]):
         self._type = type
         self._tasks = tasks
 
@@ -30,3 +30,10 @@ class MedicalEndUser():
     @property
     def tasks(self) -> list[MedicalTask]:
         return self._tasks.copy()
+    
+    def assign(self, task: MedicalTask):
+        self._tasks.add(task)
+    
+    def __str__(self) -> str:
+        task_str = "\n-\t".join(self._tasks)
+        return f"[{self._type}]\n{task_str}"
