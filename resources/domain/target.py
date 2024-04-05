@@ -29,7 +29,7 @@ class MedicalEndUser():
 
     @property
     def tasks(self) -> list[MedicalTask]:
-        return self._tasks.copy()
+        return self._tasks
     
     def assign(self, task: MedicalTask):
         self._tasks.add(task)

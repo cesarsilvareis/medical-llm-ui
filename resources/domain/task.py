@@ -136,11 +136,7 @@ class MedicalTask(MutableMapping):
         return len(self._properties)
     
     def __str__(self) -> str:
-        return str({
-            "id": self._id,
-            "name": self._name,
-            **self
-        })
+        return self._name
     
     def __repr__(self) -> str:
         return str(self)
@@ -148,13 +144,16 @@ class MedicalTask(MutableMapping):
     def __hash__(self) -> int:
         return hash(self._name) + len(self)
 
+    def to_json(self) -> dict:
+        return {
+            "id": self._id,
+            "name": self._name,
+            "properties": list(map(lambda p: json.loads(p.to_json()), self._properties))                     
+        }
+
     def save(self, save_file: str):
         with open(f"resources/load/tasks/{save_file}", 'w') as fp:
-            json.dump({
-                "id": self._id,
-                "name": self._name,
-                "properties": list(map(lambda p: json.loads(p.to_json()), self._properties))                     
-            }, fp, indent=4, sort_keys=False)
+            json.dump(self.to_json(), fp, indent=4, sort_keys=False)
     
     @classmethod
     def load(cls, save_file: str) -> 'MedicalTask':
