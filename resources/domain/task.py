@@ -69,13 +69,11 @@ class Property:
 
 
 class MedicalTask(MutableMapping):
-    ID: int = 0
 
     def __init__(self, name: str, **required_inputs):
-        self._id = MedicalTask.ID = MedicalTask.ID + 1
-        
+        self._name = name # unique for a target
+
         self._req = False
-        self._name = name
         self._properties: set[Property] = set()
 
         if required_inputs is not None:
@@ -146,18 +144,17 @@ class MedicalTask(MutableMapping):
 
     def to_json(self) -> dict:
         return {
-            "id": self._id,
             "name": self._name,
             "properties": list(map(lambda p: json.loads(p.to_json()), self._properties))                     
         }
 
     def save(self, save_file: str):
-        with open(f"resources/load/tasks/{save_file}", 'w') as fp:
+        with open(f"{save_file}", 'w') as fp:
             json.dump(self.to_json(), fp, indent=4, sort_keys=False)
     
     @classmethod
     def load(cls, save_file: str) -> 'MedicalTask':
-        with open(f"resources/load/tasks/{save_file}", 'r') as fp:
+        with open(f"{save_file}", 'r') as fp:
             json_data: dict = json.load(fp)
         dummy = cls.__new__(cls)
 
@@ -169,5 +166,6 @@ class MedicalTask(MutableMapping):
             setattr(dummy, f"_{atr}", val)
 
         dummy.to_mutable()
+        print(dummy)
         return dummy
         

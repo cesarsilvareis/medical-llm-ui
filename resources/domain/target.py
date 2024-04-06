@@ -23,6 +23,8 @@ class MedicalEndUser():
 
     def __init__(self, type: PublicTarget, tasks: set[MedicalTask]):
         self._type = type
+        if isinstance(tasks, MedicalTask):
+            tasks = {tasks}
         self._tasks = { t.name : t for t in tasks }
 
     @property
@@ -37,18 +39,18 @@ class MedicalEndUser():
     def tasks_names(self) -> list[MedicalTask]:
         return list(self._tasks.keys())
     
-    def _contains_task(self, task: MedicalTask) -> bool:
+    def contains_task(self, task: MedicalTask) -> bool:
         return task.name in self._tasks
 
     def get_task(self, name: str) -> Optional[MedicalTask]:
         return self._tasks.get(name, None)
     
     def assign(self, task: MedicalTask):
-        if self._contains_task(task):
-            print_message(f"Task {task} not assign as it already exists!", type="warning")
+        if self.contains_task(task):
+            print_message(f"Task {task} not assign as it already exists!", type="error")
             return
         
-        self._tasks[task.name] = task 
+        self._tasks[task.name] = task
     
     def __str__(self) -> str:
         task_str = "\n-\t".join(self._tasks)

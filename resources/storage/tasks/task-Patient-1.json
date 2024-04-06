@@ -1,0 +1,11 @@
+{
+    "name": "peru",
+    "properties": [
+        {
+            "name": "dede",
+            "value": "0",
+            "type": "<class 'int'>",
+            "required": true
+        }
+    ]
+}

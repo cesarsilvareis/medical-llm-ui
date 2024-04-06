@@ -91,7 +91,8 @@ def property_creator_form(task: MedicalTask) -> bool:
 
     type_config = {
         int: (st.number_input, { 
-            "label": "Enter Integer Value" 
+            "label": "Enter Integer Value",
+            "step": 1
         }),
         float: (st.number_input, {
             "label": "Enter Numeric Value"
@@ -108,12 +109,18 @@ def property_creator_form(task: MedicalTask) -> bool:
     default_value_config = type_config.get(parameter_type, None)
     assert default_value_config
 
-    value = default_value_config[0](**default_value_config[1])  
+    value = default_value_config[0](**default_value_config[1], help="Default Value")
+
+    required = st.checkbox(label="Required?", value=True, help="Is this a task input? (inmutable)")
 
     if not st.button("Submit", key="property_submit") or not valid:
         return False
 
+    if required:
+        task.to_mutable()
+
     task[name] = value
+    task.to_detailed()
     return True
 
 
@@ -134,6 +141,8 @@ def streamlit_app():
     )
 
     participant = load_participant(target_profile)
+
+    print(participant.tasks)
 
     task_name = st.selectbox(
         label="Choose a task to configure in your manner.",
@@ -156,7 +165,11 @@ def streamlit_app():
     st.header(f"Task *{task}*")
     view_col, edit_col = st.columns(2)
     with view_col:
+        if st.button("Save Task"):
+            Loader().load_to_fs(target_profile, task)
+            st.success("Saved")
         st.json(task.to_json(), expanded=True)
+
     with edit_col:
         # Select the parameter to edit
         prop = st.selectbox(label="Property", options=task.keys())
