@@ -3,7 +3,7 @@
 ################################
 
 import re
-from typing import Literal
+from typing import Literal, Union
 from pathlib import Path
 from resources.domain.target import PublicTarget
 from resources.domain.task import MedicalTask
@@ -52,7 +52,7 @@ class Loader(metaclass=Singleton):
         return target_files
 
 
-    def load_to_fs(self, target: PublicTarget, tasks: MedicalTask|set[MedicalTask]):
+    def load_to_fs(self, target: PublicTarget, tasks: Union[MedicalTask, set[MedicalTask]]):
         if type(tasks) == MedicalTask:
             tasks = set(tasks)
 
@@ -60,7 +60,7 @@ class Loader(metaclass=Singleton):
             task.save(self._get_new_target_file(target, mode="task"))
                 
 
-    def load_from_fs(self, target: PublicTarget) -> MedicalTask|set[MedicalTask]:
+    def load_from_fs(self, target: PublicTarget) -> Union[MedicalTask, set[MedicalTask]]:
         task_files = self._get_target_files(target=target, mode="task")
         load_tasks = { MedicalTask.load(f) for f in task_files }
 

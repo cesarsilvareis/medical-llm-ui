@@ -1,6 +1,6 @@
 import sys
 from enum import Enum
-from typing import Optional, Literal, Type
+from typing import Optional, Literal, Type, Union
 from pathlib import Path
 
 #-------------#
@@ -51,7 +51,7 @@ def type_from_str(str: str) -> Type:
             else builtins, 
         str)
 
-def print_message(msg: str, type: Literal["error", "warning", "hint"], exception: Optional[Exception|None]=None):
+def print_message(msg: str, type: Literal["error", "warning", "hint"], exception: Optional[Exception]=None):
     print_str = f"[{type.upper()}] {msg}"
     
     if exception is not None:
@@ -59,7 +59,8 @@ def print_message(msg: str, type: Literal["error", "warning", "hint"], exception
     
     print(print_str, file=sys.stderr)
 
-def related_to_project_path(path: Optional[str|Path], suffixes: Optional[str|Path|list[Path]|None]=None) -> Path:
+
+def related_to_project_path(path: Union[str,Path], suffixes: Optional[Union[str, Path, list[Path]]]=None) -> Path:
     actual_path = path if type(path) == Path else Path(path)
     if suffixes:
         if actual_path.is_file():

@@ -7,8 +7,10 @@
 # - Prompting guided to well-defined task
 # | As such, the task exclusively attends to a particular public target (no overlap allowed)
 
+from typing import Optional
 from resources.utils import ExtendedEnum, print_message
 from resources.domain.task import MedicalTask
+
 
 class PublicTarget(ExtendedEnum):
     PATIENT             = 0
@@ -38,7 +40,7 @@ class MedicalEndUser():
     def _contains_task(self, task: MedicalTask) -> bool:
         return task.name in self._tasks
 
-    def get_task(self, name: str) -> MedicalTask|None:
+    def get_task(self, name: str) -> Optional[MedicalTask]:
         return self._tasks.get(name, None)
     
     def assign(self, task: MedicalTask):
