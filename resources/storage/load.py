@@ -30,9 +30,14 @@ class Loader(metaclass=Singleton):
             return self.task_basefiles[target]
 
     def _get_next_file(self, file: Path) -> Path:
-        number_match = re.search(r"\d+$", file.stem)
-        number = int(number_match.group()) if number_match else 0  
-        return Path(f"{file.stem}-{number+1}.json")
+        basename = file.stem
+        if (number := re.search(r"\d+$", basename)) is None:
+            basename += "-0"
+            number = 0
+        else:
+            number = int(number.group())
+
+        return Path(re.sub(r"\d+", rf"{number + 1}", basename) + ".json")
 
     def _get_new_target_file(self, target: PublicTarget, mode: Literal["task"]) -> Path:
         guess = self._get_first_file(target, mode)
@@ -66,7 +71,6 @@ class Loader(metaclass=Singleton):
         if isinstance(tasks, MedicalTask):
             tasks = {tasks}
 
-        print(tasks, str(MedicalTask))
         for task in tasks:
             task_file = self._get_target_file(target, id=task.name, mode="task")
             task.save(self._get_related_file_path(task_file, mode="task"))
@@ -74,7 +78,6 @@ class Loader(metaclass=Singleton):
 
     def load_from_fs(self, target: PublicTarget) -> Union[MedicalTask, set[MedicalTask]]:
         task_files = self._get_target_files(target=target, mode="task")
-        print(task_files)
         load_tasks = { MedicalTask.load(self._get_related_file_path(f, mode="task")) for f in task_files }
 
         return next(iter(load_tasks)) if len(load_tasks) == 1 else load_tasks 

@@ -1,4 +1,23 @@
 {
     "name": "ola",
-    "properties": []
+    "properties": [
+        {
+            "name": "nunu",
+            "value": 0.08,
+            "type": "float",
+            "required": true
+        },
+        {
+            "name": "dededede",
+            "value": "23-04-2024",
+            "type": "date",
+            "required": true
+        },
+        {
+            "name": "text",
+            "value": "btbt",
+            "type": "str",
+            "required": false
+        }
+    ]
 }

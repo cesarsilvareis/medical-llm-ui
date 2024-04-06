@@ -85,31 +85,11 @@ def property_creator_form(task: MedicalTask) -> bool:
             int, 
             float, 
             str, 
-            datetime.datetime
+            datetime.date
         ])
     ))
 
-    type_config = {
-        int: (st.number_input, { 
-            "label": "Enter Integer Value",
-            "step": 1
-        }),
-        float: (st.number_input, {
-            "label": "Enter Numeric Value"
-        }),
-        str: (st.text_input, {
-            "label": "Enter the Text"
-        }),
-        datetime.datetime: (st.date_input, { 
-            "label": "Enter the Date", 
-            "format": "DD/MM/YYYY"
-        })
-    }
-
-    default_value_config = type_config.get(parameter_type, None)
-    assert default_value_config
-
-    value = default_value_config[0](**default_value_config[1], help="Default Value")
+    value = user_input_for_type(parameter_type, help="Default Value")
 
     required = st.checkbox(label="Required?", value=True, help="Is this a task input? (inmutable)")
 
@@ -141,8 +121,6 @@ def streamlit_app():
     )
 
     participant = load_participant(target_profile)
-
-    print(participant.tasks)
 
     task_name = st.selectbox(
         label="Choose a task to configure in your manner.",
@@ -184,7 +162,14 @@ def streamlit_app():
 
         if prop is None: return
 
-    
+        with st.form("update_prop", clear_on_submit=True):
+            st.subheader(f"Update *{prop}*")
+            new_value = user_input_for_type(task.prop_type(prop))
+            submitted = st.form_submit_button()
+            if new_value and submitted:
+                task[prop] = new_value
+
+        st.json(task.prop_to_json(prop))
 
 
 def main():

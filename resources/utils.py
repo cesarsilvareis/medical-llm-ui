@@ -1,6 +1,7 @@
 import sys
+import builtins, datetime
 from enum import Enum
-from typing import Optional, Literal, Type, Union
+from typing import Optional, Literal, Type, Union, Any
 from pathlib import Path
 
 #-------------#
@@ -8,6 +9,7 @@ from pathlib import Path
 #-------------#
 
 PROJECT_ROOT_PATH = Path(__name__).absolute().parent # running app.py path
+DATE_FORMAT = "%d-%m-%Y"
 
 #---------#
 # Classes #
@@ -44,12 +46,16 @@ def type_to_str(type: Type) -> str:
     return type.__name__
 
 def type_from_str(str: str) -> Type:
-    import builtins, datetime
     return getattr(
-            datetime if str == type_to_str(datetime.datetime) \
+            datetime if str == type_to_str(datetime.date) \
             # ...
             else builtins, 
         str)
+
+def get_typed_value(value: str, type: Type) -> Any:
+    if type is datetime.date:
+        return datetime.datetime.strptime(value, "%d-%m-%Y").date()
+    return type(value)
 
 def print_message(msg: str, type: Literal["error", "warning", "hint"], exception: Optional[Exception]=None):
     print_str = f"[{type.upper()}] {msg}"
@@ -73,3 +79,30 @@ def related_to_project_path(path: Union[str,Path], suffixes: Optional[Union[str,
                 actual_path = actual_path.joinpath(suf) # order preserved
 
     return actual_path.relative_to(Path(PROJECT_ROOT_PATH))
+
+def user_input_for_type(value_type: Type, **args):
+    import streamlit as st
+
+    type_config = {
+        int: (st.number_input, { 
+            "label": "Enter Integer Value",
+            "step": 1
+        }),
+        float: (st.number_input, {
+            "label": "Enter Numeric Value"
+        }),
+        str: (st.text_input, {
+            "label": "Enter the Text"
+        }),
+        datetime.date: (st.date_input, { 
+            "label": "Enter the Date", 
+            "format": "DD-MM-YYYY"
+        })
+    }
+
+    value_config = type_config.get(value_type, None)
+    assert value_config
+
+    return value_config[0](**value_config[1], **args)
+
+

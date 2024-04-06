@@ -10,20 +10,20 @@
 
 import json
 from collections.abc import MutableMapping
-from typing import Iterator, Optional
+from typing import Iterator, Optional, Type
 
-from resources.utils import print_message
+from resources.utils import *
 
 class Property:
     
-    def __init__(self, name: str, type: type, required=False):
+    def __init__(self, name: str, type: Type, required=False):
         self._name = name
         self._type = type
         self._value = None
         self._required = required
 
     @property
-    def info(self) -> tuple[str, type]:
+    def info(self) -> tuple[str, Type]:
         return self._name, self._type
     
     @property
@@ -46,19 +46,38 @@ class Property:
 
         self._value = value
     
-    def to_json(self):
-        return json.dumps({
+    def _value_repr(self) -> Any:
+        if not self.defined():
+            return "UNDEFINED"
+        
+        if type(self._value) is datetime.date:
+            return self._value.strftime("%d-%m-%Y")
+
+        return self._value
+
+    def to_json(self) -> dict:
+        return {
             "name": self._name,
-            "value": str(self._value) if self.defined() else "UNDEFINED",
-            "type": str(self._type),
+            "value": self._value_repr(),
+            "type": type_to_str(self._type),
             "required": self._required
-        }, indent=4)
+        }
     
     @classmethod
     def from_json(cls, json_dict: dict) -> 'Property':
-        dummy = cls.__new__(cls)
-        for atr, val in json_dict.items():
-            setattr(dummy, f"_{atr}", val)
+        assert all(attr in json_dict for attr in [
+            "name", 
+            "type",
+            "required",
+            "value"
+        ])
+
+        dummy = Property(
+            name=json_dict["name"],
+            type=type_from_str(json_dict["type"]),
+            required=json_dict["required"]
+        )
+        dummy.set_value(get_typed_value(json_dict["value"], dummy.info[1]))
         return dummy
 
     def __str__(self) -> str:
@@ -142,10 +161,22 @@ class MedicalTask(MutableMapping):
     def __hash__(self) -> int:
         return hash(self._name) + len(self)
 
+    def prop_to_json(self, prop_name: str) -> dict:
+        if not (prop := self._find_property(name=prop_name)): 
+            print_message(f"Property '{prop_name}' not found for the task {self}", "error", exception=KeyError)
+        
+        return prop.to_json()
+    
+    def prop_type(self, prop_name: str) -> Type:
+        if not (prop := self._find_property(name=prop_name)): 
+            print_message(f"Property '{prop_name}' not found for the task {self}", "error", exception=KeyError)
+        
+        return prop.info[1]
+
     def to_json(self) -> dict:
         return {
             "name": self._name,
-            "properties": list(map(lambda p: json.loads(p.to_json()), self._properties))                     
+            "properties": list(map(lambda p: p.to_json(), self._properties))                     
         }
 
     def save(self, save_file: str):
@@ -156,16 +187,16 @@ class MedicalTask(MutableMapping):
     def load(cls, save_file: str) -> 'MedicalTask':
         with open(f"{save_file}", 'r') as fp:
             json_data: dict = json.load(fp)
-        dummy = cls.__new__(cls)
+        assert all(attr in json_data for attr in ["name", "properties"])
+        
+        dummy = cls(name=json_data["name"])
+        properties = list(Property.from_json(prop_data) for prop_data in json_data["properties"])
+        for prop in properties:
+            if prop.required:
+                dummy.to_mutable()
+            dummy[prop.info[0]] = prop.value
+            dummy.to_detailed()
+            continue
 
-        for atr, val in json_data.items():
-            if atr == "properties":
-                setattr(dummy, "_properties", list(Property.from_json(prop_data) for prop_data in val))
-                continue
-
-            setattr(dummy, f"_{atr}", val)
-
-        dummy.to_mutable()
-        print(dummy)
         return dummy
         
