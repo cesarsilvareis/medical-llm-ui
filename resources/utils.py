@@ -1,6 +1,6 @@
 import sys
 from enum import Enum
-from typing import Optional, Literal
+from typing import Optional, Literal, Type
 from pathlib import Path
 
 #-------------#
@@ -39,6 +39,17 @@ class Singleton(type):
 #------------------#
 # Helper Functions #
 # -----------------#
+
+def type_to_str(type: Type) -> str:
+    return type.__name__
+
+def type_from_str(str: str) -> Type:
+    import builtins, datetime
+    return getattr(
+            datetime if str == type_to_str(datetime.datetime) \
+            # ...
+            else builtins, 
+        str)
 
 def print_message(msg: str, type: Literal["error", "warning", "hint"], exception: Optional[Exception|None]=None):
     print_str = f"[{type.upper()}] {msg}"

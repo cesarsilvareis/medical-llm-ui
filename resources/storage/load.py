@@ -8,7 +8,7 @@ from pathlib import Path
 from resources.domain.target import PublicTarget
 from resources.domain.task import MedicalTask
 
-from resources.utils import Singleton, related_to_project_path
+from resources.utils import Singleton, related_to_project_path, print_message
 
 class Loader(metaclass=Singleton):
     TEMPLATE_DIR_PATH = related_to_project_path(__file__, "prompts")
@@ -16,7 +16,7 @@ class Loader(metaclass=Singleton):
 
     def __init__(self):
         self.task_basefiles = { p: Path(f"task-{p}.json") for p in PublicTarget }
-        print("ola")
+        print_message("Loader Access", type="warning")
 
     def _get_related_file_path(self, file: Path, mode: Literal["task"]) -> Path:
         if mode == "task":

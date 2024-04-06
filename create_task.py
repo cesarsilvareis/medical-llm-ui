@@ -1,5 +1,5 @@
 #!../.venv/bin/python3
-import sys
+import sys, string, datetime
 import streamlit as st
 
 from streamlit import runtime
@@ -9,6 +9,9 @@ from resources import *
 
 import streamlit as st
 
+TASK_FORM_KEY = "task_form_expander"
+PROPERTY_FORM_KEY = "property_form_expander"
+
 @st.cache_resource
 def load_participant(target: PublicTarget) -> MedicalEndUser:
     return MedicalEndUser(
@@ -16,70 +19,102 @@ def load_participant(target: PublicTarget) -> MedicalEndUser:
         tasks=Loader().load_from_fs(target=target)
     )
 
-def submit_text_and_clear(key, **args) -> str:
-    if "text" not in st.session_state:
-        st.session_state["text"] = ""
+def create_form(creator, key, button_name, **args):
+    # The expand behavior was adapted from the st issue:
+    #   - https://discuss.streamlit.io/t/closing-current-expander-and-opening-next-by-button-press/36226/13
 
-    def submit():
-        st.session_state["text"] = st.session_state.get(key)
-        st.session_state[key] = ""
+    st.markdown("""<style>
+        [class^=st-emotion-cache-p5msec] {display: none;}
+        </style>""", unsafe_allow_html=True)
+    
+    if st.session_state.get(key) is None:
+        st.session_state[key] = False
 
-    st.text_input(key=key, on_change=submit, **args)     
-    result = st.session_state["text"]
-    st.session_state["text"] = ""
-    return result
+    if st.button(label=button_name):
+        st.session_state[key] = not st.session_state[key]
 
+    with st.expander(label="<Not Need it>", expanded=st.session_state[key]):
+        entity = creator(**args)
+        if entity is not None and type(entity) != bool or entity: # fields are valid and form was submitted
+            st.session_state[key] = False
+        return entity
 
 
 def task_creator_form(target: MedicalEndUser) -> MedicalTask:
-    with st.expander("Create a new task", expanded=False):
-        name = st.text_input(label="Task Name", value="", key="task_name")
-
-        valid_name = False
-
-        if not name or name.replace(" ", "") == "":
-            st.warning(f"Please, name your **{target.type}**  task to pursue.")
-        elif any(t.name == name for t in target.tasks):
+    def is_valid_task(name: str|None=None) -> bool:
+        if not name or name.replace(" ", "") == "" or \
+                len([c for c in name if c in string.ascii_letters]) < 3:
+            st.warning(f"Please, name your task with more than **3 alphabetic letters** to pursue.")
+            return False
+        if any(t.name == name for t in target.tasks):
             st.error(f"Invalid name for a task as it already exists for **{target.type}s**")
-        else:
-            st.success("The task can be added. Select it!")
-            valid_name = True
-
-        if not st.button("Submit") or not valid_name:
-            print("not added yet")
-            return None
-
-        print("added")
-        task = MedicalTask(name)
-        target.assign(task)
-        return task
-
-
-def parameter_form(task: MedicalTask) -> bool:
-
-    st.subheader(f"Parameter {len(task)}")
-
-    name_col, type_col = st.columns(2)
-
-    with name_col: # declaration
-        parameter_name = st.text_input("Parameter Name")
-
-    with type_col:
-        parameter_type = st.selectbox("Parameter Type", ["Text", "Number", "Dropdown"])
-        if parameter_type == "Text":
-            parameter_value = st.text_input("Enter Text Value")
-        elif parameter_type == "Number":
-            parameter_value = st.number_input("Enter Numeric Value")
-        elif parameter_type == "Dropdown":
-            options = st.text_input("Enter Dropdown Options (comma-separated)")
-            options_list = [option.strip() for option in options.split(",")]
-            parameter_value = st.selectbox("Select Dropdown Option", options_list)
-
-    if st.button("Add Parameter"):
-        task[parameter_name] = parameter_value
+            return False
+        st.success("The task can be added. Select it!")
         return True
 
-    return False
+    name = st.text_input(label="Task Name", value="")
+
+    # Tests task name before creating the submit button
+    valid = is_valid_task(name) 
+    if not st.button("Submit", key="task_submit") or not valid:
+        return None
+
+    task = MedicalTask(name)
+    target.assign(task)
+    return task
+
+
+def property_creator_form(task: MedicalTask) -> bool:
+    def is_valid_property(name: str|None=None) -> bool:
+        if not name or name.replace(" ", "") == "" or \
+                any(c not in string.ascii_letters for c in name) or len(name) < 3:
+            st.warning(f"Please, name your property **only using alphabetic letters (+2)** to pursue.")
+            return False
+        if name in task :
+            st.error(f"Invalid name for the property as it already exists")
+            return False
+        st.success("The property can be added. **Submit** it and **Select** it!")
+        return True
+
+    name = st.text_input(label="Property Name", value="")
+    valid = is_valid_property(name)
+
+    parameter_type = type_from_str(st.selectbox(
+        label="Type (inmutable)", 
+        options=map(lambda t: type_to_str(t), [
+            int, 
+            float, 
+            str, 
+            datetime.datetime
+        ])
+    ))
+
+    type_config = {
+        int: (st.number_input, { 
+            "label": "Enter Integer Value" 
+        }),
+        float: (st.number_input, {
+            "label": "Enter Numeric Value"
+        }),
+        str: (st.text_input, {
+            "label": "Enter the Text"
+        }),
+        datetime.datetime: (st.date_input, { 
+            "label": "Enter the Date", 
+            "format": "DD/MM/YYYY"
+        })
+    }
+
+    default_value_config = type_config.get(parameter_type, None)
+    assert default_value_config
+
+    value = default_value_config[0](**default_value_config[1])  
+
+    if not st.button("Submit", key="property_submit") or not valid:
+        return False
+
+    task[name] = value
+    return True
 
 
 def streamlit_app():
@@ -100,19 +135,43 @@ def streamlit_app():
 
     participant = load_participant(target_profile)
 
-    task = st.selectbox(
+    task_name = st.selectbox(
         label="Choose a task to configure in your manner.",
-        options=participant.tasks,
+        options=participant.tasks_names,
         key="selected_task"
     )
 
-    if task_creator_form(participant) is not None:
-        st.rerun() # Move to selection
+    if create_form(
+        creator=task_creator_form, 
+        key=TASK_FORM_KEY,
+        button_name=f"Add new {target_profile} Task",
+        target=participant) is not None:
+        
+        st.rerun() # Move to task selection
 
-    if task is not None:
-        st.header(f"Task *{task}*")
-        st.write(task.to_json())
-        parameter_form(task)
+    if task_name is None: return
+
+    task = participant.get_task(task_name)
+
+    st.header(f"Task *{task}*")
+    view_col, edit_col = st.columns(2)
+    with view_col:
+        st.json(task.to_json(), expanded=True)
+    with edit_col:
+        # Select the parameter to edit
+        prop = st.selectbox(label="Property", options=task.keys())
+
+        if create_form(
+            creator=property_creator_form, 
+            key=PROPERTY_FORM_KEY,
+            button_name=f"Add new Property",
+            task=task):
+
+            st.rerun() # Move to task selection
+
+        if prop is None: return
+
+    
 
 
 def main():
