@@ -53,5 +53,5 @@ class MedicalEndUser():
         self._tasks[task.name] = task
     
     def __str__(self) -> str:
-        task_str = "\n-\t".join(self._tasks)
+        task_str = "-\t" + "\n-\t".join(self._tasks)
         return f"[{self._type}]\n{task_str}"

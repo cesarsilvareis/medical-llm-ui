@@ -1,23 +1,23 @@
 {
-    "name": "ola",
+    "name": "IE Guidelines Congress Slide Builder",
     "properties": [
         {
-            "name": "nunu",
-            "value": 0.08,
-            "type": "float",
-            "required": true
-        },
-        {
-            "name": "dededede",
-            "value": "23-04-2024",
-            "type": "date",
-            "required": true
-        },
-        {
-            "name": "text",
-            "value": "btbt",
+            "name": "Language",
+            "value": "Portuguese",
             "type": "str",
-            "required": false
+            "required": true
+        },
+        {
+            "name": "Duration",
+            "value": 20,
+            "type": "int",
+            "required": true
+        },
+        {
+            "name": "Theme",
+            "value": "IE Guideline Updates",
+            "type": "str",
+            "required": true
         }
     ]
 }
