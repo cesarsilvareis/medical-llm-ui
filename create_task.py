@@ -88,7 +88,7 @@ def property_creator_form(task: MedicalTask) -> bool:
         ])
     ))
 
-    value = user_input_for_type(parameter_type, help="Default Value")
+    value = create_input_for_type(parameter_type, help="Default Value")
 
     required = st.checkbox(label="Required?", value=True, help="Is this a task input? (inmutable)")
 
@@ -98,7 +98,7 @@ def property_creator_form(task: MedicalTask) -> bool:
     if required:
         task.to_mutable()
 
-    task[name] = value
+    task[canonical_prop(name)] = value
     task.to_detailed()
     return True
 
@@ -226,7 +226,7 @@ def streamlit_app():
 
             with st.form("update_prop", clear_on_submit=True):
                 st.subheader(f"Update *{prop}*")
-                new_value = user_input_for_type(task.prop_type(prop))
+                new_value = create_input_for_type(task.prop_type(prop))
                 submitted = st.form_submit_button()
                 if new_value and submitted:
                     task[prop] = new_value

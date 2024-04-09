@@ -95,7 +95,7 @@ def related_to_project_path(path: Union[str,Path], suffixes: Optional[Union[str,
 
     return actual_path.relative_to(Path(PROJECT_ROOT_PATH))
 
-def user_input_for_type(value_type: Type, **args):
+def create_input_for_type(value_type: Type, **args) -> Any:
     import streamlit as st
 
     def list_handler(**lst_args):
@@ -143,6 +143,28 @@ def user_input_for_type(value_type: Type, **args):
     assert value_config
 
     return value_config[0](**value_config[1], **args)
+
+def draw_user_input_for_type(value_type: Type, **args):
+    import streamlit as st
+    
+    def list_handler(value: Optional[list], **args):
+        if value is None or not isinstance(value, list):
+            value = []
+        return st.selectbox(options=value, **args)
+    
+    type_config = {
+        int: (st.number_input, { "step": 1 }),
+        float: (st.number_input, {}),
+        str: (st.text_input, {}),
+        datetime.date: (st.date_input, { "format": "DD-MM-YYYY" }),
+        list: (list_handler, {})
+    }
+
+    value_config = type_config.get(value_type, None)
+    assert value_config
+
+    return value_config[0](**value_config[1], **args)
+
 
 def text_copy_button(text: str):
     import streamlit as st, pyperclip as clip 

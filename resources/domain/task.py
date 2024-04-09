@@ -32,16 +32,18 @@ class Property:
     
     @property
     def value(self):
-        return self._value
+        return self._value[0] if self._type is list else self._value
     
     def defined(self) -> bool:
         return self._value is not None
 
     def set_value(self, value):
-        # if self.defined():
-        #     print_message(f"The property {self} already has a value", "error", RuntimeError)
-        
         if type(value) != self._type:
+            if self._type is list:
+                self._value.remove(value)
+                self._value.insert(0, value)
+                return
+
             print_message(f"The type of the given value differs from the property type", "error", TypeError)
 
         self._value = value
@@ -52,7 +54,7 @@ class Property:
         
         if type(self._value) is datetime.date:
             return self._value.strftime("%d-%m-%Y")
-
+        
         return self._value
 
     def to_json(self) -> dict:
@@ -84,7 +86,7 @@ class Property:
         return str(self.to_json())
 
     def __repr__(self) -> str:
-        return f"Property: info={', '.join(*self.info)}; value={self.value}"
+        return f"Property: info={self.info}; value={self.value}"
 
     def __format__(self, format_spec: str) -> str:
         match format_spec:
@@ -180,6 +182,11 @@ class MedicalTask(MutableMapping):
         
         return prop.info[1]
 
+    def prop_value(self, prop_name: str) -> Any: # representation value : list vs element
+        if not (prop := self._find_property(name=prop_name)): 
+            print_message(f"Property '{prop_name}' not found for the task {self}", "error", exception=KeyError)
+        return prop.to_json()["value"]
+
     def to_json(self) -> dict:
         return {
             "name": self._name,
@@ -201,7 +208,7 @@ class MedicalTask(MutableMapping):
         for prop in properties:
             if prop.required:
                 dummy.to_mutable()
-            dummy[prop.info[0]] = prop.value
+            dummy[prop.info[0]] = prop.to_json()["value"]
             dummy.to_detailed()
             continue
 

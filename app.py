@@ -7,78 +7,91 @@ from streamlit.web.cli import main as strunner
 
 from resources import *
 
-@st.cache_data
+@st.cache_resource
 def load_participant(target: PublicTarget) -> MedicalEndUser:
     return MedicalEndUser(
         type=target,
         tasks=Loader().load_tasks_from_fs(target=target)
     )
 
+def load_template(target: PublicTarget, task: MedicalTask) -> MedicalTemplate:
+    return Loader().load_task_prompt_from_fs(target, task)
+
+
+def configuration_form(task: MedicalTask):
+    properties = sorted(task.keys())
+
+    for prop in properties:
+        task[prop] = draw_user_input_for_type(
+            value_type=task.prop_type(prop),
+            label=from_canonical_prop(prop),
+            value=task.prop_value(prop)
+        )
+
+
+def draw_template(target: PublicTarget, task: MedicalTask):
+    if "template" not in st.session_state:
+        st.session_state["template"] = ""
+
+    if st.button("Submit"):
+        st.session_state["template"] = load_template(target, task).build()
+
+    if not st.session_state["template"]: return
+
+    st.subheader("III. Template Result 📩")
+    template_col, info_col = st.columns([8.5, 1.5])
+    
+    with open("resources/style/template.css", 'r') as t:
+        template_col.markdown(f'<style>{t.read()}</style>', unsafe_allow_html=True)
+    
+    template_col.markdown(f'<div class="custom-box">{st.session_state["template"]}</div>', unsafe_allow_html=True)
+
+    with info_col:
+        text_copy_button(st.session_state["template"])        
+    
+    st.image("resources/storage/img/chatgptlogo.png", width=45)
+    st.info("Please copy it! And move to **[ChatGPT](%s)** to prompt it!" %("https://chat.openai.com"))
+
 def streamlit_app():
 
     st.set_page_config(
         page_title="DrGPT - Medical Template",
         page_icon="📓",
-        layout="wide",
-        initial_sidebar_state="auto"
+        layout="centered",
+        initial_sidebar_state="collapsed"
     )
 
     st.title("Encapsulating the Prompt Engineering for Medical Users")
 
-    result = None
+    st.subheader("I. What would you like to ChatGPT do? 👨🏻‍⚕️")
+
+    target_profile = st.selectbox(
+        label="👤 Select your public target", 
+        options=list(PublicTarget)
+    )
+
+    participant = load_participant(target_profile)
+
+    task_name = st.selectbox(
+        label=f"📝 What it the task focussing {target_profile}s?", 
+        options=participant.tasks_names
+    )
+
+    if not task_name: return
+
+    st.divider()
+
+    st.subheader("II. Fill Up the Template ✍🏻")
+
+    task = participant.get_task(name=task_name)
+    
+    configuration_form(task)
+
+    draw_template(target_profile, task)
+    
 
     with st.sidebar:
-        st.write("Configuration:")
-
-        target_profile = st.selectbox(
-            label="Public Target", 
-            options=list(PublicTarget)
-        )
-
-        participant = load_participant(target_profile)
-
-        print(participant)
-
-        task_name = st.selectbox(label="Task", options=[
-            "IE Guidelines Congress Slide Builder"
-        ])
-
-        if not task_name: return
-
-        st.divider()
-
-        task = participant.get_task(name=task_name)
         st.json(task.to_json())
-
-        # theme = st.text_input(label="Theme", value="", max_chars=25)
-
-        # presenter_name = st.text_input(label="Presenter Name", value="", max_chars=15)
-        # presenter_affiliation = st.text_input(label="Presenter Affiliation", value="", max_chars=15)
-        # date_time = st.date_input("Presentation Date", format="DD/MM/YYYY")
-
-        # objective = st.text_area(label="Objectives", value="Inform possible changes on IE guidelines")
-        # audience = st.text_input(label="Targeted Audience", value="Physicians", max_chars=25)
-
-        # tone = st.text_input(label="Tone", value="rigorous", max_chars=20)
-        # language = st.selectbox(label="Language", options=["English", "Portuguese"])
-
-        # duration = st.number_input(label="Duration (in minutes)")
-        # slide_time = st.number_input(label="Expected Slide Time (slides/min)", value=1)
-
-        if st.button(label="Submit"):
-            ...
-
-    # Prompt Placement
-
-    if result is None:
-        st.info("No specific configuration has been established for crafting a new prompt.")
-        return
-
-    st.write(f"""
-    ## Task : {task_name}
-    """)
-    st.write(result)
-    st.info("Please copy it! And move to [ChatGPT](%s) to prompt it!" %("https://chat.openai.com"))
              
 
 def main():

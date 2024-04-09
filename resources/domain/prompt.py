@@ -31,6 +31,10 @@ class MedicalTemplate():
     def template_str(self) -> str:
         return self._template_str
     
+    @property
+    def order(self) -> list[str]:
+        return self._get_prompt_template().input_variables
+    
     def _get_prompt_template(self) -> PromptTemplate:
         return PromptTemplate.from_template(self._template_str)
 
