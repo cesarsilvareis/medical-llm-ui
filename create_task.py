@@ -206,7 +206,10 @@ def streamlit_app():
 
     with edit_col:
         # Select the parameter to edit
-        prop = st.selectbox(label="Property", options=task.keys())
+        prop = st.selectbox(
+            label="Property", 
+            options=task.keys(),
+            format_func=from_canonical_prop)
 
         if create_form(
             creator=property_creator_form, 
@@ -217,6 +220,8 @@ def streamlit_app():
             st.rerun() # Move to task selection
 
         if prop is None: return
+
+        prop = canonical_prop(prop)
 
         with st.form("update_prop", clear_on_submit=True):
             st.subheader(f"Update *{prop}*")

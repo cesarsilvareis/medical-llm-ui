@@ -73,7 +73,7 @@ class Property:
         ])
 
         dummy = cls(
-            name=from_canonical_prop(json_dict["name"]),
+            name=json_dict["name"],
             type=type_from_str(json_dict["type"]),
             required=json_dict["required"]
         )
