@@ -105,6 +105,35 @@ def property_creator_form(task: MedicalTask) -> bool:
     return True
 
 
+def prompt_viewer(target: PublicTarget, task: MedicalTask):
+    prompt = Loader().load_task_prompt_from_fs(target, task)
+
+    prompt_txt = st.text_area(
+        label="Template",
+        value=str(prompt) if prompt else "",
+        height=400
+    )
+
+    if not prompt_txt or prompt is not None \
+                        and prompt.template_str == prompt_txt:
+        return
+
+    if st.button("Save Template"):
+        try:
+            if prompt is None:
+                prompt = MedicalTemplate(
+                    template_str=prompt_txt,
+                    task=task
+                )
+            else:
+                prompt.change_template(prompt_txt)
+        except Exception as e:
+            st.error(str(e))
+            return
+
+        Loader().load_task_prompt_to_fs(target, prompt)
+
+
 def streamlit_app():
 
     st.set_page_config(
@@ -190,6 +219,8 @@ def streamlit_app():
             st.rerun()
 
         st.json(task.prop_to_json(prop))
+    
+    prompt_viewer(target_profile, task)
 
 
 def main():

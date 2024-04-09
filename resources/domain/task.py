@@ -72,7 +72,7 @@ class Property:
             "value"
         ])
 
-        dummy = Property(
+        dummy = cls(
             name=json_dict["name"],
             type=type_from_str(json_dict["type"]),
             required=json_dict["required"]
@@ -184,8 +184,8 @@ class MedicalTask(MutableMapping):
             json.dump(self.to_json(), fp, indent=4, sort_keys=False)
     
     @classmethod
-    def load(cls, save_file: str) -> 'MedicalTask':
-        with open(f"{save_file}", 'r') as fp:
+    def load(cls, saved_file: str) -> 'MedicalTask':
+        with open(f"{saved_file}", 'r') as fp:
             json_data: dict = json.load(fp)
         assert all(attr in json_data for attr in ["name", "properties"])
         
