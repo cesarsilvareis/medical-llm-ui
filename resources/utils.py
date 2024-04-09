@@ -83,6 +83,29 @@ def related_to_project_path(path: Union[str,Path], suffixes: Optional[Union[str,
 def user_input_for_type(value_type: Type, **args):
     import streamlit as st
 
+    def list_handler(**lst_args):
+        num_options = st.number_input(
+            label="Number of Options",
+            value=0,
+            step=1,
+            **lst_args
+        )
+        options = []
+        for i in range(num_options):
+            option = st.text_input(
+                label=f"Option {i + 1}",
+                max_chars=25
+            )
+            if not option:
+                continue
+
+            if option in options:
+                st.warning("Found repeated options!")
+                return []
+
+            options.append(option)
+        return options
+
     type_config = {
         int: (st.number_input, { 
             "label": "Enter Integer Value",
@@ -97,7 +120,8 @@ def user_input_for_type(value_type: Type, **args):
         datetime.date: (st.date_input, { 
             "label": "Enter the Date", 
             "format": "DD-MM-YYYY"
-        })
+        }),
+        list: (list_handler, {})
     }
 
     value_config = type_config.get(value_type, None)

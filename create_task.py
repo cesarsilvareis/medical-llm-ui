@@ -16,7 +16,7 @@ PROPERTY_FORM_KEY = "property_form_expander"
 def load_participant(target: PublicTarget) -> MedicalEndUser:
     return MedicalEndUser(
         type=target,
-        tasks=Loader().load_from_fs(target=target)
+        tasks=Loader().load_tasks_from_fs(target=target)
     )
 
 def create_form(creator, key, button_name, **args):
@@ -85,7 +85,8 @@ def property_creator_form(task: MedicalTask) -> bool:
             int, 
             float, 
             str, 
-            datetime.date
+            datetime.date,
+            list
         ])
     ))
 
@@ -143,9 +144,22 @@ def streamlit_app():
     st.header(f"Task *{task}*")
     view_col, edit_col = st.columns(2)
     with view_col:
-        if st.button("Save Task"):
-            Loader().load_to_fs(target_profile, task)
-            st.success("Saved")
+        save_col, delete_col = st.columns(2)
+        with save_col:
+            if st.button("Save Task"):
+                Loader().load_tasks_to_fs(target_profile, task)
+                st.success("Saved")
+        with delete_col:
+            if st.button("Delete"):
+                try:
+                    Loader().exclude_task(target_profile, task)
+                except FileNotFoundError:
+                    st.error("The task was not saved!")
+                    return
+
+                participant.remove_task(task)
+                st.rerun()
+
         st.json(task.to_json(), expanded=True)
 
     with edit_col:
@@ -168,6 +182,12 @@ def streamlit_app():
             submitted = st.form_submit_button()
             if new_value and submitted:
                 task[prop] = new_value
+
+        if st.button("Remove Property"):
+            assert prop in task
+
+            del task[prop]
+            st.rerun()
 
         st.json(task.prop_to_json(prop))
 

@@ -45,7 +45,13 @@ class MedicalEndUser():
     def get_task(self, name: str) -> Optional[MedicalTask]:
         return self._tasks.get(name, None)
     
-    def assign(self, task: MedicalTask):
+    def remove_task(self, task: MedicalTask) -> None:
+        if not self.contains_task(task):
+            print_message(f"Task {task} not assign as it already exists!", type="error")
+            return
+        del self._tasks[task.name]
+    
+    def assign(self, task: MedicalTask) -> None:
         if self.contains_task(task):
             print_message(f"Task {task} not assign as it already exists!", type="error")
             return

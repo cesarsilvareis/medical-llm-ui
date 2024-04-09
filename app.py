@@ -11,7 +11,7 @@ from resources import *
 def load_participant(target: PublicTarget) -> MedicalEndUser:
     return MedicalEndUser(
         type=target,
-        tasks=Loader().load_from_fs(target=target)
+        tasks=Loader().load_tasks_from_fs(target=target)
     )
 
 def streamlit_app():

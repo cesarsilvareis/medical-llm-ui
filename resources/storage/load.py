@@ -65,19 +65,26 @@ class Loader(metaclass=Singleton):
                 assert data.get("name", None)
                 if data["name"] == id:
                     return file
-        return self._get_new_target_file(target, mode)
+        return None
 
-    def load_to_fs(self, target: PublicTarget, tasks: Union[MedicalTask, set[MedicalTask]]):
+    def load_tasks_to_fs(self, target: PublicTarget, tasks: Union[MedicalTask, set[MedicalTask]]):
         if isinstance(tasks, MedicalTask):
             tasks = {tasks}
 
         for task in tasks:
             task_file = self._get_target_file(target, id=task.name, mode="task")
+            if task_file is None:
+                task_file = self._get_new_target_file(target, mode="task")
             task.save(self._get_related_file_path(task_file, mode="task"))
 
 
-    def load_from_fs(self, target: PublicTarget) -> Union[MedicalTask, set[MedicalTask]]:
+    def load_tasks_from_fs(self, target: PublicTarget) -> Union[MedicalTask, set[MedicalTask]]:
         task_files = self._get_target_files(target=target, mode="task")
         load_tasks = { MedicalTask.load(self._get_related_file_path(f, mode="task")) for f in task_files }
 
         return next(iter(load_tasks)) if len(load_tasks) == 1 else load_tasks 
+
+    def exclude_task(self, target: PublicTarget, task: MedicalTask):
+        if (task_file := self._get_target_file(target, id=task.name, mode="task")) is None:
+            print_message(f"Cannot delete the task {task.name} it lost its source file", "error", FileNotFoundError)
+        self._get_related_file_path(task_file, mode="task").unlink()
