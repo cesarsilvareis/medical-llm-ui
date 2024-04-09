@@ -102,8 +102,9 @@ class Loader(metaclass=Singleton):
         prompt.save(self._get_related_file_path(prompt_file, mode="prompt"))
 
     def load_task_prompt_from_fs(self, target: PublicTarget, task: MedicalTask) -> Optional[MedicalTemplate]:
-        if (task_file := self._get_target_file(target, id=task.name, mode="task")) is None:
-            print_message(f"No file for task '{task.name}' to get its prompt", "error", FileNotFoundError)
+        if self._get_target_file(target, id=task.name, mode="task") is None:
+            return None
+
         prompt_file = self._get_target_file(target, id=task.name, mode="prompt")
         if prompt_file is None:
             return None

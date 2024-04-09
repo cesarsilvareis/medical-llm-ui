@@ -17,9 +17,11 @@ from resources.utils import print_message
 
 class MedicalTemplate():
 
-    def __init__(self, template_str: str, task: MedicalTask):
+    def __init__(self, template_str: str, task: MedicalTask, validate: bool=True):
         self._template_str = template_str
         self._task = task # unchanged reference with required variables
+        if validate:
+            self._check_prompt_validity()
 
     @property
     def name(self) -> str:
@@ -95,7 +97,8 @@ class MedicalTemplate():
 
         dummy = cls(
             template_str=json_data["content"],
-            task=task
+            task=task,
+            validate=False
         )
 
         return dummy

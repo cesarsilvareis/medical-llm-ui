@@ -105,7 +105,7 @@ def property_creator_form(task: MedicalTask) -> bool:
 
 def prompt_viewer(target: PublicTarget, task: MedicalTask):
     prompt = Loader().load_task_prompt_from_fs(target, task)
-
+        
     prompt_txt = st.text_area(
         label="Template",
         value=str(prompt) if prompt else "",
@@ -119,32 +119,32 @@ def prompt_viewer(target: PublicTarget, task: MedicalTask):
         text_copy_button(prompt_txt)
 
     with check_col:
-        if prompt:
-            if st.button("Check"):
-                try:
-                    prompt.change_template(prompt_txt)
-                    st.success("**Valid!**")
-                except Exception as e:
-                    st.error(f"**Not Valid Yet** {e}")
+        check = st.button("Check Template")
     
-    with save_col: 
-        if not st.button("Save Template"):
-            return
+    with save_col:
+        save = st.button("Save Template")
+        if save: check = True
 
-        try:
-            if prompt is None:
-                prompt = MedicalTemplate(
-                    template_str=prompt_txt,
-                    task=task
-                )
-            else:
-                prompt.change_template(prompt_txt)
-        except Exception as e:
-            st.error(str(e))
-            return
+    if not check: return
 
+    try:
+        if prompt is None:
+            prompt = MedicalTemplate(
+                template_str=prompt_txt,
+                task=task
+            )
+        else:
+            prompt.change_template(prompt_txt)
+    except Exception as e:
+        st.error(str(e))
+        return
+
+    if save:
         Loader().load_task_prompt_to_fs(target, prompt)
         st.success("Template Saved!")
+        return
+    
+    st.success("Valid!")
 
 
 def streamlit_app():
@@ -183,6 +183,8 @@ def streamlit_app():
 
     task = participant.get_task(task_name)
 
+    if task is None: return
+
     st.header(f"Task *{task}*")
     view_col, edit_col = st.columns(2)
     with view_col:
@@ -219,24 +221,23 @@ def streamlit_app():
 
             st.rerun() # Move to task selection
 
-        if prop is None: return
+        if prop:
+            prop = canonical_prop(prop)
 
-        prop = canonical_prop(prop)
+            with st.form("update_prop", clear_on_submit=True):
+                st.subheader(f"Update *{prop}*")
+                new_value = user_input_for_type(task.prop_type(prop))
+                submitted = st.form_submit_button()
+                if new_value and submitted:
+                    task[prop] = new_value
 
-        with st.form("update_prop", clear_on_submit=True):
-            st.subheader(f"Update *{prop}*")
-            new_value = user_input_for_type(task.prop_type(prop))
-            submitted = st.form_submit_button()
-            if new_value and submitted:
-                task[prop] = new_value
+            if st.button("Remove Property"):
+                assert prop in task
 
-        if st.button("Remove Property"):
-            assert prop in task
+                del task[prop]
+                st.rerun()
 
-            del task[prop]
-            st.rerun()
-
-        st.json(task.prop_to_json(prop))
+            st.json(task.prop_to_json(prop))
     
     prompt_viewer(target_profile, task)
 
