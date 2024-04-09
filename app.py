@@ -4,6 +4,7 @@ import streamlit as st
 
 from streamlit import runtime
 from streamlit.web.cli import main as strunner
+from streamlit.delta_generator import DeltaGenerator
 
 from resources import *
 
@@ -18,22 +19,33 @@ def load_template(target: PublicTarget, task: MedicalTask) -> MedicalTemplate:
     return Loader().load_task_prompt_from_fs(target, task)
 
 
-def configuration_form(task: MedicalTask):
+def configuration_form(task: MedicalTask) -> bool:
+    def draw_input_properties(column: DeltaGenerator, properties: list[str]):
+        with column:
+            for prop in properties:
+                task[prop] = draw_user_input_for_type(
+                    value_type=task.prop_type(prop),
+                    label=from_canonical_prop(prop),
+                    value=task.prop_value(prop)
+                )
+
     properties = sorted(task.keys())
+    c1, c2 = st.columns(2)
+    draw_input_properties(c1, properties[::2])
+    draw_input_properties(c2, properties[1::2])
 
-    for prop in properties:
-        task[prop] = draw_user_input_for_type(
-            value_type=task.prop_type(prop),
-            label=from_canonical_prop(prop),
-            value=task.prop_value(prop)
-        )
+    c1, c2 = st.columns([2, 8])
+    if c1.button("Submit"):
+        c2.success("Check the result below!")
+        return True
+    return False
 
 
-def draw_template(target: PublicTarget, task: MedicalTask):
+def draw_template(submitted: bool, target: PublicTarget, task: MedicalTask):
     if "template" not in st.session_state:
         st.session_state["template"] = ""
 
-    if st.button("Submit"):
+    if submitted:
         st.session_state["template"] = load_template(target, task).build()
 
     if not st.session_state["template"]: return
@@ -63,7 +75,7 @@ def streamlit_app():
 
     st.title("Encapsulating the Prompt Engineering for Medical Users")
 
-    st.subheader("I. What would you like to ChatGPT do? 👨🏻‍⚕️")
+    st.subheader("I. What would you like **ChatGPT** to do for you? 👨🏻‍⚕️")
 
     target_profile = st.selectbox(
         label="👤 Select your public target", 
@@ -73,7 +85,7 @@ def streamlit_app():
     participant = load_participant(target_profile)
 
     task_name = st.selectbox(
-        label=f"📝 What it the task focussing {target_profile}s?", 
+        label=f"📝 Idealize a task tailored to **{target_profile}s**", 
         options=participant.tasks_names
     )
 
@@ -85,9 +97,9 @@ def streamlit_app():
 
     task = participant.get_task(name=task_name)
     
-    configuration_form(task)
-
-    draw_template(target_profile, task)
+    form_submitted = configuration_form(task)
+    st.divider()
+    draw_template(form_submitted, target_profile, task)
     
 
     with st.sidebar:
