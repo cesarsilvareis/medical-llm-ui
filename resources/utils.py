@@ -57,6 +57,21 @@ def get_typed_value(value: str, type: Type) -> Any:
         return datetime.datetime.strptime(value, "%d-%m-%Y").date()
     return type(value)
 
+def canonical_prop(prop: str) -> str:
+    import re
+    return  re.sub(r'[^_a-zA-Z0-9]', '',
+            re.sub(r'_+', '_',
+            re.sub(r' ', '_',
+            re.sub(r'\(([a-zA-Z0-9]+)\)', '_in_\g<1>', 
+            re.sub("/", "_per_", prop.lower())))))
+
+def from_canonical_prop(canonical_prop: str) -> str:
+    import re
+    return  " ".join(e.capitalize() for e in \
+            re.sub(r"_", " ", 
+            re.sub(r"in_([a-zA-Z0-9]+)(_|$)", "(\g<1>)", 
+            re.sub(r"_per_", "/", canonical_prop))).split(" "))
+
 def print_message(msg: str, type: Literal["error", "warning", "hint"], exception: Optional[Exception]=None):
     print_str = f"[{type.upper()}] {msg}"
     
@@ -128,5 +143,14 @@ def user_input_for_type(value_type: Type, **args):
     assert value_config
 
     return value_config[0](**value_config[1], **args)
+
+def text_copy_button(text: str):
+    import streamlit as st, pyperclip as clip 
+    
+    if not st.button("Copy"):
+        return
+    
+    clip.copy(text)
+    st.success("Template Copied!")
 
 

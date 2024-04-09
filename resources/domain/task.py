@@ -57,7 +57,7 @@ class Property:
 
     def to_json(self) -> dict:
         return {
-            "name": self._name,
+            "name": f"{self:can}",
             "value": self._value_repr(),
             "type": type_to_str(self._type),
             "required": self._required
@@ -73,7 +73,7 @@ class Property:
         ])
 
         dummy = cls(
-            name=json_dict["name"],
+            name=from_canonical_prop(json_dict["name"]),
             type=type_from_str(json_dict["type"]),
             required=json_dict["required"]
         )
@@ -84,7 +84,14 @@ class Property:
         return str(self.to_json())
 
     def __repr__(self) -> str:
-        return str(self)
+        return f"Property: info={', '.join(*self.info)}; value={self.value}"
+
+    def __format__(self, format_spec: str) -> str:
+        match format_spec:
+            case "can": # canonical form
+                return canonical_prop(self._name)
+            case _:
+                return self._name
 
 
 class MedicalTask(MutableMapping):

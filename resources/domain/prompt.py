@@ -20,7 +20,6 @@ class MedicalTemplate():
     def __init__(self, template_str: str, task: MedicalTask):
         self._template_str = template_str
         self._task = task # unchanged reference with required variables
-        self._check_prompt_validity()
 
     @property
     def name(self) -> str:
@@ -55,8 +54,8 @@ class MedicalTemplate():
             )
 
     def change_template(self, new_template):
-        self._check_prompt_validity()
         self._template_str = new_template
+        self._check_prompt_validity()
 
     def build(self) -> str:
         self._check_prompt_validity()

@@ -7,7 +7,6 @@ from streamlit.web.cli import main as strunner
 
 from resources import *
 
-import streamlit as st
 
 TASK_FORM_KEY = "task_form_expander"
 PROPERTY_FORM_KEY = "property_form_expander"
@@ -66,9 +65,8 @@ def task_creator_form(target: MedicalEndUser) -> MedicalTask:
 
 def property_creator_form(task: MedicalTask) -> bool:
     def is_valid_property(name: str|None=None) -> bool:
-        if not name or name.replace(" ", "") == "" or \
-                any(c not in string.ascii_letters for c in name) or len(name) < 3:
-            st.warning(f"Please, name your property **only using alphabetic letters (+2)** to pursue.")
+        if not name or name.replace(" ", "") == "":
+            st.warning(f"Please, name your property to pursue.")
             return False
         if name in task :
             st.error(f"Invalid name for the property as it already exists")
@@ -114,11 +112,25 @@ def prompt_viewer(target: PublicTarget, task: MedicalTask):
         height=400
     )
 
-    if not prompt_txt or prompt is not None \
-                        and prompt.template_str == prompt_txt:
-        return
+    if not prompt_txt: return
 
-    if st.button("Save Template"):
+    copy_col, check_col, save_col = st.columns(3)
+    with copy_col:
+        text_copy_button(prompt_txt)
+
+    with check_col:
+        if prompt:
+            if st.button("Check"):
+                try:
+                    prompt.change_template(prompt_txt)
+                    st.success("**Valid!**")
+                except Exception as e:
+                    st.error(f"**Not Valid Yet** {e}")
+    
+    with save_col: 
+        if not st.button("Save Template"):
+            return
+
         try:
             if prompt is None:
                 prompt = MedicalTemplate(
@@ -132,6 +144,7 @@ def prompt_viewer(target: PublicTarget, task: MedicalTask):
             return
 
         Loader().load_task_prompt_to_fs(target, prompt)
+        st.success("Template Saved!")
 
 
 def streamlit_app():

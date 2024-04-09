@@ -2,21 +2,27 @@
     "name": "IE Guidelines Congress Slide Builder",
     "properties": [
         {
-            "name": "Language",
+            "name": "language",
             "value": "Portuguese",
             "type": "str",
             "required": true
         },
         {
-            "name": "Duration",
+            "name": "duration",
             "value": 20,
             "type": "int",
             "required": true
         },
         {
-            "name": "Theme",
+            "name": "theme",
             "value": "IE Guideline Updates",
             "type": "str",
+            "required": true
+        },
+        {
+            "name": "duration_in_min",
+            "value": 1,
+            "type": "int",
             "required": true
         }
     ]
