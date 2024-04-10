@@ -19,8 +19,9 @@ class Property:
     def __init__(self, name: str, type: Type, required=False):
         self._name = name
         self._type = type
-        self._value = None
         self._required = required
+        self._value = None
+        self._default_value = None
 
     @property
     def info(self) -> tuple[str, Type]:
@@ -33,6 +34,10 @@ class Property:
     @property
     def value(self):
         return self._value[0] if self._type is list else self._value
+    
+    @property
+    def default_value(self):
+        return self._default_value
     
     def defined(self) -> bool:
         return self._value is not None
@@ -47,6 +52,13 @@ class Property:
             print_message(f"The type of the given value differs from the property type", "error", TypeError)
 
         self._value = value
+        
+        if self._default_value is not None:
+            return
+        
+        if type(value) is list:
+            value = value.copy()
+        self._default_value = value
     
     def _value_repr(self) -> Any:
         if not self.defined():
@@ -182,9 +194,11 @@ class MedicalTask(MutableMapping):
         
         return prop.info[1]
 
-    def prop_value(self, prop_name: str) -> Any: # representation value : list vs element
+    def prop_value(self, prop_name: str, default=False) -> Any: # representation value : list vs element
         if not (prop := self._find_property(name=prop_name)): 
             print_message(f"Property '{prop_name}' not found for the task {self}", "error", exception=KeyError)
+        if default:
+            return prop.default_value
         return prop.to_json()["value"]
 
     def to_json(self) -> dict:

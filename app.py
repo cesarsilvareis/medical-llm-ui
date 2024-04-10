@@ -26,7 +26,7 @@ def configuration_form(task: MedicalTask) -> bool:
                 task[prop] = draw_user_input_for_type(
                     value_type=task.prop_type(prop),
                     label=from_canonical_prop(prop),
-                    value=task.prop_value(prop)
+                    value=task.prop_value(prop, default=True)
                 )
 
     properties = sorted(task.keys())
