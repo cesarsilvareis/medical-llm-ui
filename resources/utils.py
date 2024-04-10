@@ -1,4 +1,4 @@
-import sys
+import sys, streamlit as st
 import builtins, datetime
 from enum import Enum
 from typing import Optional, Literal, Type, Union, Any
@@ -96,7 +96,6 @@ def related_to_project_path(path: Union[str,Path], suffixes: Optional[Union[str,
     return actual_path.relative_to(Path(PROJECT_ROOT_PATH))
 
 def create_input_for_type(value_type: Type, **args) -> Any:
-    import streamlit as st
 
     def list_handler(**lst_args):
         num_options = st.number_input(
@@ -145,7 +144,6 @@ def create_input_for_type(value_type: Type, **args) -> Any:
     return value_config[0](**value_config[1], **args)
 
 def draw_user_input_for_type(value_type: Type, **args):
-    import streamlit as st
     
     def list_handler(value: Optional[list], **args):
         if value is None or not isinstance(value, list):
@@ -166,13 +164,31 @@ def draw_user_input_for_type(value_type: Type, **args):
     return value_config[0](**value_config[1], **args)
 
 
+def link_ref_to_html(ref_file: Union[str, Path], ext: Literal["css", "js"]):
+    tag = {
+        "css": "style",
+        "js": "script"
+    }.get(ext)
+
+    if not tag: return
+
+    if type(ref_file) is str:
+        ref_file = Path(ref_file)
+    
+    with ref_file.open('r') as rf:
+        return f'<{tag}>{rf.read()}</{tag}>'
+
+
 def text_copy_button(text: str):
-    import streamlit as st, pyperclip as clip 
-    
-    if not st.button("Copy"):
-        return
-    
-    clip.copy(text)
-    st.success("Template Copied!")
+    from streamlit.components.v1 import html
 
-
+    html(
+        f"""
+        {link_ref_to_html(ref_file="./resources/style/copy_button.css", ext="css")}
+        <button id="copy" class="copy-btn">Copy</button> 
+        {link_ref_to_html(ref_file="./resources/js/clipboard_copy.js", ext="js")}
+        <script>copyToClipboard(`{text}`)</script>
+        """, 
+        width=65, 
+        height=42.5
+    )

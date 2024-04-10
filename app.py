@@ -53,8 +53,10 @@ def draw_template(submitted: bool, target: PublicTarget, task: MedicalTask):
     st.subheader("III. Template Result 📩")
     template_col, info_col = st.columns([8.5, 1.5])
     
-    with open("resources/style/template.css", 'r') as t:
-        template_col.markdown(f'<style>{t.read()}</style>', unsafe_allow_html=True)
+    template_col.markdown(
+        link_ref_to_html("resources/style/template.css", "css"),
+        unsafe_allow_html=True
+    )
     
     template_col.markdown(f'<div class="custom-box">{st.session_state["template"]}</div>', unsafe_allow_html=True)
 
