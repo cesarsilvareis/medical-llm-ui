@@ -51,7 +51,7 @@ def draw_template(submitted: bool, target: PublicTarget, task: MedicalTask):
     if not st.session_state["template"]: return
 
     st.subheader("III. Template Result 📩")
-    template_col, info_col = st.columns([8.5, 1.5])
+    template_col, info_col = st.columns([9.5, .5])
     
     template_col.markdown(
         link_ref_to_html("resources/style/template.css", "css"),
@@ -64,7 +64,8 @@ def draw_template(submitted: bool, target: PublicTarget, task: MedicalTask):
         text_copy_button(st.session_state["template"])        
     
     st.image("resources/storage/img/chatgptlogo.png", width=45)
-    st.info("Please copy it! And move to **[ChatGPT](%s)** to prompt it!" %("https://chat.openai.com"))
+    st.info("Please copy the template! 👉 Move to **[ChatGPT](%s)** to prompt it!" \
+            %("https://chat.openai.com"))
 
 def streamlit_app():
 

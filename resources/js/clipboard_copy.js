@@ -11,6 +11,12 @@ function copyToClipboard(text) {
             document.execCommand('copy');
             // Clean up - remove the temporary textarea
             document.body.removeChild(tempTextarea);
+
+            buttonText = "📋"
+            copyButton.textContent = "✅"
+            setTimeout(() => {
+                copyButton.textContent = buttonText
+            }, 1500);
         });
     });
 }

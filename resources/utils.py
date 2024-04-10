@@ -185,10 +185,11 @@ def text_copy_button(text: str):
     html(
         f"""
         {link_ref_to_html(ref_file="./resources/style/copy_button.css", ext="css")}
-        <button id="copy" class="copy-btn">Copy</button> 
+        <button id="copy" class="copy-btn">📋</button> 
         {link_ref_to_html(ref_file="./resources/js/clipboard_copy.js", ext="js")}
         <script>copyToClipboard(`{text}`)</script>
         """, 
-        width=65, 
-        height=42.5
+        width=38.5, 
+        height=38.5
     )
+
