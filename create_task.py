@@ -135,6 +135,7 @@ def prompt_viewer(target: PublicTarget, task: MedicalTask):
             )
         else:
             prompt.change_template(prompt_txt)
+            st.markdown(prompt.build()) # to check prompt is accepted for the task
     except Exception as e:
         st.error(str(e))
         return
@@ -225,7 +226,8 @@ def streamlit_app():
             prop = canonical_prop(prop)
 
             with st.form("update_prop", clear_on_submit=True):
-                st.subheader(f"Update *{prop}*")
+                st.subheader("Update")
+                st.write(f"*{prop}*")
                 new_value = create_input_for_type(task.prop_type(prop))
                 submitted = st.form_submit_button()
                 if new_value and submitted:

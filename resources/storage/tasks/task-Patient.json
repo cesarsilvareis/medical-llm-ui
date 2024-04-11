@@ -1,0 +1,21 @@
+{
+    "name": "IE Concept Explication in Informative Flyers",
+    "properties": [
+        {
+            "name": "page_size_in_#word_per_page",
+            "value": 75,
+            "type": "int",
+            "required": true
+        },
+        {
+            "name": "target_language_in_nationality",
+            "value": [
+                "European Portuguese",
+                "English",
+                "French"
+            ],
+            "type": "list",
+            "required": true
+        }
+    ]
+}

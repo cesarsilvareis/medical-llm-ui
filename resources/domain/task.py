@@ -93,6 +93,9 @@ class Property:
         )
         dummy.set_value(get_typed_value(json_dict["value"], dummy.info[1]))
         return dummy
+    
+    def __hash__(self) -> int:
+        return hash(self.value)
 
     def __str__(self) -> str:
         return str(self.to_json())
@@ -180,7 +183,7 @@ class MedicalTask(MutableMapping):
         return str(self)
 
     def __hash__(self) -> int:
-        return hash(self._name) + len(self)
+        return hash(self._name) + sum(hash(p) for p in self._properties)
 
     def prop_to_json(self, prop_name: str) -> dict:
         if not (prop := self._find_property(name=prop_name)): 

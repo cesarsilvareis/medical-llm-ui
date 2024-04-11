@@ -42,15 +42,19 @@ def configuration_form(task: MedicalTask) -> bool:
 
 
 def draw_template(submitted: bool, target: PublicTarget, task: MedicalTask):
-    if "template" not in st.session_state:
+    template_id = lambda: hash(target) + hash(task)
+
+    if "template" not in st.session_state or template_id() != st.session_state.get("template_id", 0):
         st.session_state["template"] = ""
 
-    if submitted:
-        st.session_state["template"] = load_template(target, task).build()
+    if submitted and (template := load_template(target, task)) is not None:
+        st.session_state["template"] = template.build()
+        st.session_state["template_id"] = template_id()
 
     if not st.session_state["template"]: return
 
     st.subheader("III. Template Result 📩")
+
     template_col, info_col = st.columns([9.5, .5])
     
     template_col.markdown(
@@ -58,7 +62,7 @@ def draw_template(submitted: bool, target: PublicTarget, task: MedicalTask):
         unsafe_allow_html=True
     )
     
-    template_col.markdown(f'<div class="custom-box">{st.session_state["template"]}</div>', unsafe_allow_html=True)
+    template_col.markdown(f'<div class="custom-box">\n\n{st.session_state["template"]}</div>', unsafe_allow_html=True)
 
     with info_col:
         text_copy_button(st.session_state["template"])        

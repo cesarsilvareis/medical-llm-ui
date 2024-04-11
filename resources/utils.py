@@ -59,17 +59,17 @@ def get_typed_value(value: str, type: Type) -> Any:
 
 def canonical_prop(prop: str) -> str:
     import re
-    return  re.sub(r'[^_a-zA-Z0-9]', '',
+    return  re.sub(r'[^_#a-zA-Z0-9]', '',
             re.sub(r'_+', '_',
+            re.sub(r'\(([_#a-zA-Z0-9]+)\)', '_in_\g<1>', 
             re.sub(r' ', '_',
-            re.sub(r'\(([a-zA-Z0-9]+)\)', '_in_\g<1>', 
             re.sub("/", "_per_", prop.lower())))))
 
 def from_canonical_prop(canonical_prop: str) -> str:
     import re
     return  " ".join(e.capitalize() for e in \
             re.sub(r"_", " ", 
-            re.sub(r"in_([a-zA-Z0-9]+)(_|$)", "(\g<1>)", 
+            re.sub(r"in_([#/a-zA-Z0-9]+)(_|$)", "(\g<1>)", 
             re.sub(r"_per_", "/", canonical_prop))).split(" "))
 
 def print_message(msg: str, type: Literal["error", "warning", "hint"], exception: Optional[Exception]=None):
@@ -182,12 +182,13 @@ def link_ref_to_html(ref_file: Union[str, Path], ext: Literal["css", "js"]):
 def text_copy_button(text: str):
     from streamlit.components.v1 import html
 
+    copy_text = text.replace("`", "\`")
     html(
         f"""
         {link_ref_to_html(ref_file="./resources/style/copy_button.css", ext="css")}
         <button id="copy" class="copy-btn">📋</button> 
         {link_ref_to_html(ref_file="./resources/js/clipboard_copy.js", ext="js")}
-        <script>copyToClipboard(`{text}`)</script>
+        <script>copyToClipboard(`{copy_text}`)</script>
         """, 
         width=38.5, 
         height=38.5
