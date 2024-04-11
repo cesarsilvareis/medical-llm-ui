@@ -1,4 +1,29 @@
 {
     "name": "IE Theoretical Slide Builder",
-    "properties": []
+    "properties": [
+        {
+            "name": "requirements",
+            "value": "1.\u00a0The first slide should have the presentation overview. 2. An analogy in the last slide targeting the PROFILE pursuits relating to this cardiovascular pathology.",
+            "type": "str",
+            "required": true
+        },
+        {
+            "name": "slide_size_in_#words_per_slide",
+            "value": 25,
+            "type": "int",
+            "required": true
+        },
+        {
+            "name": "selective_topics",
+            "value": "risk factors, causes, basic diagnosis, complications, and generic treatment",
+            "type": "str",
+            "required": true
+        },
+        {
+            "name": "#_slides",
+            "value": 5,
+            "type": "int",
+            "required": true
+        }
+    ]
 }

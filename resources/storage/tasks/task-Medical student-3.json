@@ -1,4 +1,26 @@
 {
     "name": "IE Evaluation with Open-Ended Questions",
-    "properties": []
+    "properties": [
+        {
+            "name": "answer_detail_level_in_#words",
+            "value": 50,
+            "type": "int",
+            "required": true
+        },
+        {
+            "name": "evaluation_topics",
+            "value": "Portuguese epidemiology, etiology, detailed diagnosis and treatment, complications, and simple prophylaxis and prognosis",
+            "type": "str",
+            "required": true
+        },
+        {
+            "name": "academic_level",
+            "value": [
+                "Regular",
+                "Advanced"
+            ],
+            "type": "list",
+            "required": true
+        }
+    ]
 }

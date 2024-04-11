@@ -74,7 +74,7 @@ class Loader(metaclass=Singleton):
         return None
 
     def load_tasks_to_fs(self, target: PublicTarget, tasks: Union[MedicalTask, set[MedicalTask]]) -> None:
-        if isinstance(tasks, MedicalTask):
+        if type(tasks) is not set:
             tasks = {tasks}
 
         for task in tasks:

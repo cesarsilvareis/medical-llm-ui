@@ -2,14 +2,38 @@
     "name": "IE Guidelines Congress Slide Builder",
     "properties": [
         {
+            "name": "presenter_name",
+            "value": "C\u00e9sar",
+            "type": "str",
+            "required": true
+        },
+        {
             "name": "duration_in_min",
-            "value": 1,
+            "value": 20,
             "type": "int",
+            "required": true
+        },
+        {
+            "name": "presenter_affiliation",
+            "value": "IST",
+            "type": "str",
             "required": true
         },
         {
             "name": "theme",
             "value": "IE Guideline Updates",
+            "type": "str",
+            "required": true
+        },
+        {
+            "name": "slide_size_in_min_per_slide",
+            "value": 1,
+            "type": "int",
+            "required": true
+        },
+        {
+            "name": "tone",
+            "value": "rigorous",
             "type": "str",
             "required": true
         },
@@ -20,6 +44,24 @@
                 "Portuguese"
             ],
             "type": "list",
+            "required": true
+        },
+        {
+            "name": "date",
+            "value": "01-04-2024",
+            "type": "date",
+            "required": true
+        },
+        {
+            "name": "audience",
+            "value": "physicians, medical researchers and teachers",
+            "type": "str",
+            "required": true
+        },
+        {
+            "name": "objective",
+            "value": "provide a formal overview of the updated guidelines for the clinical management of infective endocarditis in Portugal",
+            "type": "str",
             "required": true
         }
     ]

@@ -59,18 +59,22 @@ def get_typed_value(value: str, type: Type) -> Any:
 
 def canonical_prop(prop: str) -> str:
     import re
-    return  re.sub(r'[^_#a-zA-Z0-9]', '',
+    return  re.sub(r'[^_\.#a-zA-Z0-9]', '',
             re.sub(r'_+', '_',
-            re.sub(r'\(([_#a-zA-Z0-9]+)\)', '_in_\g<1>', 
+            re.sub(r'\(([_\.#a-zA-Z0-9]+)\)', '_in_\g<1>', 
             re.sub(r' ', '_',
-            re.sub("/", "_per_", prop.lower())))))
+            re.sub(r"\.", "_dot_",
+            re.sub(r"\-", "_minus_",
+            re.sub(r"/", "_per_", prop.lower())))))))
 
 def from_canonical_prop(canonical_prop: str) -> str:
     import re
     return  " ".join(e.capitalize() for e in \
             re.sub(r"_", " ", 
-            re.sub(r"in_([#/a-zA-Z0-9]+)(_|$)", "(\g<1>)", 
-            re.sub(r"_per_", "/", canonical_prop))).split(" "))
+            re.sub(r"in_([\.#/a-zA-Z0-9]+)(_|$)", "(\g<1>)",
+            re.sub(r"_dot_", ". ",  
+            re.sub(r"_minus_", "-",  
+            re.sub(r"_per_", "/", canonical_prop))))).split(" "))
 
 def print_message(msg: str, type: Literal["error", "warning", "hint"], exception: Optional[Exception]=None):
     print_str = f"[{type.upper()}] {msg}"

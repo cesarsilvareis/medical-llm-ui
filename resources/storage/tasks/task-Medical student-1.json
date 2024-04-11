@@ -1,4 +1,38 @@
 {
     "name": "IE Theoretical Slide Builder",
-    "properties": []
+    "properties": [
+        {
+            "name": "requirements",
+            "value": "1. The first slide has the presentation overview followed by a motivational slide representing the disease incidence in Portugal. 2. The last slide includes the presentation takeaways.",
+            "type": "str",
+            "required": true
+        },
+        {
+            "name": "#_slides",
+            "value": 5,
+            "type": "int",
+            "required": true
+        },
+        {
+            "name": "selective_topics",
+            "value": "Portuguese epidemiology, etiology, detailed diagnosis and treatment, complications, and simple prophylaxis and prognosis.",
+            "type": "str",
+            "required": true
+        },
+        {
+            "name": "student_academic_level",
+            "value": [
+                "Regular Medical Student",
+                "Advanced Medical Student"
+            ],
+            "type": "list",
+            "required": true
+        },
+        {
+            "name": "slide_size_in_#words_per_slide",
+            "value": 25,
+            "type": "int",
+            "required": true
+        }
+    ]
 }

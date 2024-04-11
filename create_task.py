@@ -104,11 +104,16 @@ def property_creator_form(task: MedicalTask) -> bool:
 
 
 def prompt_viewer(target: PublicTarget, task: MedicalTask):
+    template_id = lambda: hash(target) + hash(task)
     prompt = Loader().load_task_prompt_from_fs(target, task)
-        
+
+    if template_id() != st.session_state.get("template_id", 0):
+        st.session_state["template_load"] = str(prompt) if prompt else ""
+        st.session_state["template_id"] = template_id()
+
     prompt_txt = st.text_area(
         label="Template",
-        value=str(prompt) if prompt else "",
+        value=st.session_state["template_load"],
         height=400
     )
 
@@ -142,10 +147,7 @@ def prompt_viewer(target: PublicTarget, task: MedicalTask):
 
     if save:
         Loader().load_task_prompt_to_fs(target, prompt)
-        st.success("Template Saved!")
         return
-    
-    st.success("Valid!")
 
 
 def streamlit_app():
@@ -183,7 +185,6 @@ def streamlit_app():
     if task_name is None: return
 
     task = participant.get_task(task_name)
-
     if task is None: return
 
     st.header(f"Task *{task}*")

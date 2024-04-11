@@ -1,4 +1,23 @@
 {
     "name": "IE Concept Explication in Text",
-    "properties": []
+    "properties": [
+        {
+            "name": "area_of_interest_in_list",
+            "value": "nurse, microbiology, or cardio-pneumology",
+            "type": "str",
+            "required": true
+        },
+        {
+            "name": "topics_in_list",
+            "value": "risk factors, causes, basic diagnosis, complications, and generic treatment",
+            "type": "str",
+            "required": true
+        },
+        {
+            "name": "length_in_#words",
+            "value": 100,
+            "type": "int",
+            "required": true
+        }
+    ]
 }

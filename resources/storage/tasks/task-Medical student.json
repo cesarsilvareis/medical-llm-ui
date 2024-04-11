@@ -1,4 +1,17 @@
 {
     "name": "IE Concept Explication in Text",
-    "properties": []
+    "properties": [
+        {
+            "name": "length_in_#words",
+            "value": 100,
+            "type": "int",
+            "required": true
+        },
+        {
+            "name": "topics_in_list",
+            "value": "Portuguese epidemiology, etiology, detailed diagnosis and treatment, complications, and simple prophylaxis and prognosis",
+            "type": "str",
+            "required": true
+        }
+    ]
 }
