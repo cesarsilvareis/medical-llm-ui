@@ -5,6 +5,7 @@ import streamlit as st
 from uuid import uuid4
 from streamlit import runtime
 from streamlit.web.cli import main as strunner
+from streamlit.runtime.uploaded_file_manager import UploadedFile
 
 from resources import *
 
@@ -22,8 +23,13 @@ def load_participant(target: PublicTarget) -> MedicalEndUser:
     )
 
 @st.cache_resource(hash_funcs={MedicalTask: MedicalTask.__hash__})
-def load_templates(target: PublicTarget, task: MedicalTask) -> MedicalTemplate|set[MedicalTemplate]|None:
+def load_templates_from_fs(target: PublicTarget, task: MedicalTask) -> MedicalTemplate|set[MedicalTemplate]|None:
     return Loader.load_templates_from_fs(target, task)
+
+@st.cache_resource(hash_funcs={MedicalTask: MedicalTask.__hash__, UploadedFile: lambda f: f.name})
+def load_templates_from_file(task: MedicalTask, file: UploadedFile) -> MedicalTemplate|set[MedicalTemplate]|None:
+    return Loader.load_templates_from_file(task, file)
+
 
 def create_form(creator, key, button_name, **args):
     # The expand behavior was adapted from the st issue:
@@ -273,23 +279,18 @@ def streamlit_app():
     st.subheader("Templates")
     template_file = st.file_uploader("Upload Template File", key=f"upload_{task.name}")
     if template_file is not None:   # From submitted file
-        templates = Loader.load_templates_from_file(task, template_file)
-    else:                           # From FS loading
-        templates = load_templates(target_profile, task)
+        templates = load_templates_from_file(task, template_file)
         if templates is None:
-            load_templates.clear()
+            load_templates_from_file.clear()
+    else:                           # From FS loading
+        templates = load_templates_from_fs(target_profile, task)
+        if templates is None:
+            load_templates_from_fs.clear()
     
     # There is no templates available, so nothing more to do here...
     if templates is None: return
     
     templates = settization(templates)
-
-    # Erases previous template from file given room to newer
-    if template_file is not None:
-        if "template_id" in st.session_state:
-            for template in templates:
-                if template.id in st.session_state["template_id"]:
-                    del st.session_state["template_id"][template.id]
 
     save_col, delete_col, _ = st.columns((.5, .5, 9))
     if save_col.button("Save All", type="primary"):
