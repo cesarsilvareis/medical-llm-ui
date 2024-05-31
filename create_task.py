@@ -161,7 +161,7 @@ def template_viewer(template: Optional[MedicalTemplate]):
 
     if to_display:
         try:
-            display_col.markdown(template.build()) # to check if task accepts this template
+            display_col.code(template.build(), language="markdown", line_numbers=True)
         except Exception as e:
             display_col.error(str(e))
     
@@ -247,9 +247,16 @@ def streamlit_app():
                 st.subheader("Update")
                 st.write(f"*{prop}*")
                 new_value = create_input_for_type(task.prop_type(prop))
+                required = st.checkbox(label="Required", value=task.is_required_property(prop))
                 submitted = st.form_submit_button()
-                if new_value and submitted:
-                    task[prop] = new_value
+                
+                if submitted:
+                    if not required:
+                        task.to_detailed()
+                    
+                    task[prop] = new_value if new_value else task[prop]
+                    task.to_mutable()
+                    st.rerun()
 
             if st.button("Remove Property"):
                 assert prop in task
@@ -269,13 +276,15 @@ def streamlit_app():
         templates = Loader.load_templates_from_file(task, template_file)
     else:                           # From FS loading
         templates = load_templates(target_profile, task)
+        if templates is None:
+            load_templates.clear()
     
     # There is no templates available, so nothing more to do here...
     if templates is None: return
     
     templates = settization(templates)
 
-    # Erases previous template data given room for newer
+    # Erases previous template from file given room to newer
     if template_file is not None:
         if "template_id" in st.session_state:
             for template in templates:

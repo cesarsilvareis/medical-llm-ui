@@ -137,7 +137,7 @@ class Loader:
         return set_optional_return({ 
                 MedicalTemplate(
                     prompt=MedicalPrompt(
-                        prompt_content.replace("\r", ""),
+                        prompt_content.replace("\r", "").replace("{", "{{").replace("}", "}}"),
                         name=prompt_name,
                         iteration=prompt_id,
                         score=0,

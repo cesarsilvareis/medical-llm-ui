@@ -42,7 +42,7 @@ class Property:
     def defined(self) -> bool:
         return self._value is not None
 
-    def set_value(self, value):
+    def set_value(self, value, required: bool|None=None):
         if type(value) != self._type:
             if self._type is list:
                 self._value.remove(value)
@@ -52,14 +52,16 @@ class Property:
             print_message(f"The type of the given value differs from the property type", "error", TypeError)
 
         self._value = value
-        
+        if required is not None:
+            self._required = required
+
         if self._default_value is not None:
             return
         
         if type(value) is list:
             value = value.copy()
         self._default_value = value
-    
+        
     def _value_repr(self) -> Any:
         if not self.defined():
             return "UNDEFINED"
@@ -131,7 +133,7 @@ class MedicalTask(MutableMapping):
     def _find_property(self, name: str) -> Optional[Property]:
         return next((p for p in self._properties if p.info[0] == name), None) # why is python using 'next' for sets???
 
-    def _is_required_property(self, name: str) -> bool:
+    def is_required_property(self, name: str) -> bool:
         if not (prop := self._find_property(name=name)): 
             return False
         
@@ -139,7 +141,7 @@ class MedicalTask(MutableMapping):
 
     
     def get_required_inputs(self) -> set[str]:
-        return set(p for p in dict(**self) if self._is_required_property(p))
+        return set(p for p in dict(**self) if self.is_required_property(p))
 
     def to_mutable(self): # required input
         self._req = True
@@ -155,7 +157,7 @@ class MedicalTask(MutableMapping):
     
     def __setitem__(self, key, value):
         if (prop := self._find_property(name=key)): 
-            prop.set_value(value)
+            prop.set_value(value, required=self._req)
             return
 
         new_prop = Property(name=key, type=type(value), required=self._req)

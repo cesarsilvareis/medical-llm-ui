@@ -2,20 +2,14 @@
     "name": "IE Guidelines Congress Slide Builder",
     "properties": [
         {
-            "name": "presenter_name",
-            "value": "C\u00e9sar",
-            "type": "str",
-            "required": true
-        },
-        {
-            "name": "duration_in_min",
-            "value": 20,
+            "name": "slide_size_in_min_per_slide",
+            "value": 1,
             "type": "int",
             "required": true
         },
         {
-            "name": "presenter_affiliation",
-            "value": "IST",
+            "name": "objective",
+            "value": "provide a formal overview of the updated guidelines for the clinical management of infective endocarditis in Portugal",
             "type": "str",
             "required": true
         },
@@ -26,14 +20,14 @@
             "required": true
         },
         {
-            "name": "slide_size_in_min_per_slide",
-            "value": 1,
-            "type": "int",
+            "name": "date",
+            "value": "01-04-2024",
+            "type": "str",
             "required": true
         },
         {
-            "name": "tone",
-            "value": "rigorous",
+            "name": "presenter_affiliation",
+            "value": "IST",
             "type": "str",
             "required": true
         },
@@ -47,20 +41,20 @@
             "required": true
         },
         {
-            "name": "date",
-            "value": "01-04-2024",
-            "type": "date",
-            "required": true
-        },
-        {
             "name": "audience",
             "value": "physicians, medical researchers and teachers",
             "type": "str",
             "required": true
         },
         {
-            "name": "objective",
-            "value": "provide a formal overview of the updated guidelines for the clinical management of infective endocarditis in Portugal",
+            "name": "duration_in_min",
+            "value": 20,
+            "type": "int",
+            "required": true
+        },
+        {
+            "name": "presenter_name",
+            "value": "C\u00e9sar",
             "type": "str",
             "required": true
         }
