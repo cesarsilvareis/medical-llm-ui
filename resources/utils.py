@@ -84,6 +84,11 @@ def print_message(msg: str, type: Literal["error", "warning", "hint"], exception
     
     print(print_str, file=sys.stderr)
 
+def set_optional_return(my_set: set[Any]) -> Optional[Union[Any, set[Any]]]:
+    return my_set if len(my_set) > 1 else next(iter(my_set), None)
+
+def settization(mydata: Any|set[Any]) -> set[Any]:
+    return {mydata} if type(mydata) is not set else mydata
 
 def related_to_project_path(path: Union[str,Path], suffixes: Optional[Union[str, Path, list[Path]]]=None) -> Path:
     actual_path = path if type(path) == Path else Path(path)
@@ -98,6 +103,36 @@ def related_to_project_path(path: Union[str,Path], suffixes: Optional[Union[str,
                 actual_path = actual_path.joinpath(suf) # order preserved
 
     return actual_path.relative_to(Path(PROJECT_ROOT_PATH))
+
+def text2words(text: str, return_indexes: bool=False) -> list[str]:
+    import re
+    word_pattern = re.compile(
+        r'(-? ?\(?\w+[\.:\-\;),?]?| ?"[\w`]+"\)?|:?[\.\-<"#\*/{}>]{2,}| &|\n)'
+    )
+    if not return_indexes:
+        return word_pattern.findall(text)
+
+    matches = word_pattern.finditer(text)
+    return [(match.group(), match.start()) for match in matches]
+
+def get_rows(line_size: int, words: list[str]) -> int:
+    if words == list():
+        return 0
+
+    remaining_space = line_size # measured in number of chars
+    if len(words[0]) > remaining_space:
+        raise ValueError(f"Getting Row ERROR: '{words[0]}' does not fit in line.\n") 
+
+    for i, word in enumerate(words):
+        if word == "\n":
+            return 1 + get_rows(line_size, words[i+1:]) # erase new line char
+        if len(word) > remaining_space:
+            return 1 + get_rows(line_size, words[i:]) # including itself as it does not fit
+        
+        # line still not cutted down
+        remaining_space -= len(word)
+
+    return 1 # line has not been completed but counts aswell
 
 def create_input_for_type(value_type: Type, **args) -> Any:
 
@@ -189,9 +224,9 @@ def text_copy_button(text: str):
     copy_text = text.replace("`", "\`")
     html(
         f"""
-        {link_ref_to_html(ref_file="./resources/style/copy_button.css", ext="css")}
+        {link_ref_to_html(ref_file="./resources/static/style/copy_button.css", ext="css")}
         <button id="copy" class="copy-btn">📋</button> 
-        {link_ref_to_html(ref_file="./resources/js/clipboard_copy.js", ext="js")}
+        {link_ref_to_html(ref_file="./resources/static/js/clipboard_copy.js", ext="js")}
         <script>copyToClipboard(`{copy_text}`)</script>
         """, 
         width=38.5, 

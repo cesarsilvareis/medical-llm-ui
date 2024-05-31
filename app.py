@@ -58,7 +58,7 @@ def draw_template(submitted: bool, target: PublicTarget, task: MedicalTask):
     template_col, info_col = st.columns([9.5, .5])
     
     template_col.markdown(
-        link_ref_to_html("resources/style/template.css", "css"),
+        link_ref_to_html("resources/static/style/template.css", "css"),
         unsafe_allow_html=True
     )
     

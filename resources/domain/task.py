@@ -10,7 +10,7 @@
 
 import json
 from collections.abc import MutableMapping
-from typing import Iterator, Optional, Type
+from typing import Iterator, Optional, Type, Self
 
 from resources.utils import *
 
@@ -125,8 +125,8 @@ class MedicalTask(MutableMapping):
             self.to_detailed()
 
     @property
-    def name(self):
-        return self._name
+    def name(this):
+        return this._name
 
     def _find_property(self, name: str) -> Optional[Property]:
         return next((p for p in self._properties if p.info[0] == name), None) # why is python using 'next' for sets???
@@ -181,6 +181,9 @@ class MedicalTask(MutableMapping):
     
     def __repr__(self) -> str:
         return str(self)
+
+    def __eq__(self, other: Self) -> bool:
+        return type(other) is MedicalTask and self.name == other.name
 
     def __hash__(self) -> int:
         return hash(self._name) + sum(hash(p) for p in self._properties)

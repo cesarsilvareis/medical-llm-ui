@@ -2,21 +2,21 @@
     "name": "IE Concept Explication in Text",
     "properties": [
         {
-            "name": "area_of_interest_in_list",
-            "value": "nurse, microbiology, or cardio-pneumology",
-            "type": "str",
+            "name": "length_in_#words",
+            "value": 100,
+            "type": "int",
             "required": true
         },
         {
             "name": "topics_in_list",
-            "value": "risk factors, causes, basic diagnosis, complications, and generic treatment",
+            "value": "(1) risk factors and causes; (2) essentials of the diagnosis and complications; and (3) generic treatment.",
             "type": "str",
-            "required": true
+            "required": false
         },
         {
-            "name": "length_in_#words",
-            "value": 100,
-            "type": "int",
+            "name": "area_of_interest_in_list",
+            "value": "nurse, microbiology, or cardio-pneumology",
+            "type": "str",
             "required": true
         }
     ]

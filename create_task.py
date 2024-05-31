@@ -2,6 +2,7 @@
 import sys, string, datetime
 import streamlit as st
 
+from uuid import uuid4
 from streamlit import runtime
 from streamlit.web.cli import main as strunner
 
@@ -11,12 +12,18 @@ from resources import *
 TASK_FORM_KEY = "task_form_expander"
 PROPERTY_FORM_KEY = "property_form_expander"
 
+# Using cache resources to keep object references. cache data will create a copy...
+
 @st.cache_resource
 def load_participant(target: PublicTarget) -> MedicalEndUser:
     return MedicalEndUser(
         type=target,
-        tasks=Loader().load_tasks_from_fs(target=target)
+        tasks=Loader.load_tasks_from_fs(target=target)
     )
+
+@st.cache_resource(hash_funcs={MedicalTask: MedicalTask.__hash__})
+def load_templates(target: PublicTarget, task: MedicalTask) -> MedicalTemplate|set[MedicalTemplate]|None:
+    return Loader.load_templates_from_fs(target, task)
 
 def create_form(creator, key, button_name, **args):
     # The expand behavior was adapted from the st issue:
@@ -32,7 +39,7 @@ def create_form(creator, key, button_name, **args):
     if st.button(label=button_name):
         st.session_state[key] = not st.session_state[key]
 
-    with st.expander(label="<Not Need it>", expanded=st.session_state[key]):
+    with st.expander(label="", expanded=st.session_state[key]):
         entity = creator(**args)
         if entity is not None and type(entity) != bool or entity: # fields are valid and form was submitted
             st.session_state[key] = False
@@ -103,51 +110,62 @@ def property_creator_form(task: MedicalTask) -> bool:
     return True
 
 
-def prompt_viewer(target: PublicTarget, task: MedicalTask):
-    template_id = lambda: hash(target) + hash(task)
-    prompt = Loader().load_task_prompt_from_fs(target, task)
-
-    if template_id() != st.session_state.get("template_id", 0):
-        st.session_state["template_load"] = str(prompt) if prompt else ""
-        st.session_state["template_id"] = template_id()
-
-    prompt_txt = st.text_area(
-        label="Template",
-        value=st.session_state["template_load"],
-        height=400
-    )
-
-    if not prompt_txt: return
-
-    copy_col, check_col, save_col = st.columns(3)
-    with copy_col:
-        text_copy_button(prompt_txt)
-
-    with check_col:
-        check = st.button("Check Template")
+def template_viewer(template: Optional[MedicalTemplate]):
+    if template is None:
+        return
     
-    with save_col:
-        save = st.button("Save Template")
-        if save: check = True
+    if "template_id" not in st.session_state:
+        st.session_state["template_id"] = {}
 
-    if not check: return
+    if template.id not in st.session_state.get("template_id"):
+        st.session_state["template_id"][template.id] = str(template), uuid4().hex
 
-    try:
-        if prompt is None:
-            prompt = MedicalTemplate(
-                template_str=prompt_txt,
-                task=task
-            )
-        else:
-            prompt.change_template(prompt_txt)
-            st.markdown(prompt.build()) # to check prompt is accepted for the task
-    except Exception as e:
-        st.error(str(e))
-        return
+    st.write(f"#### {template.iteration} | {template.name} ####")
+    template_col, display_col, tool_col = st.columns((4.35, 4.35, 1.35))
 
-    if save:
-        Loader().load_task_prompt_to_fs(target, prompt)
-        return
+    template_col.write(f"##### 🧬 Template #####")
+    template_original, hash = st.session_state["template_id"][template.id]
+    template_changed = template_col.text_area(
+        label="Template",
+        key=f"template_{template.id}_{hash}",
+        value=template_original,
+        label_visibility="hidden",
+        height= 24 * (get_rows(line_size=94, words=text2words(template_original)) + 1)
+    )
+    display_col.write(f"##### 👁️ Display View #####")
+
+    if not template_changed: return
+
+    tools = tool_col.container(height=150, border=True)
+    
+    copy_btn, display_tgl = tools.columns((2.75, 7.25))
+    
+    with copy_btn:
+        text_copy_button(template_changed)
+
+    to_display = display_tgl.toggle("Display", key=f"display_{template.id}", value=True)
+
+    score_btn, reset_btn = tools.columns((6, 4))
+
+    score_value = score_btn.number_input("Score (1-5⭐)", key=f"score_{template.id}", value=template.score)
+    if score_value != template.score:
+        template.change_score(new_score=score_value)
+    
+    if reset_btn.button("Reset", key=f"reset_{template.id}"):
+        template_changed = None
+        del st.session_state["template_id"][template.id]
+    
+    if template_changed != str(template):
+        template.change_template(template_changed, to_validate=False)  
+        st.rerun()
+
+    if to_display:
+        try:
+            display_col.markdown(template.build()) # to check if task accepts this template
+        except Exception as e:
+            display_col.error(str(e))
+    
+    st.divider()
 
 
 def streamlit_app():
@@ -155,7 +173,7 @@ def streamlit_app():
     st.set_page_config(
         page_title="DrGPT - Medical Template",
         page_icon="📓",
-        layout="centered",
+        layout="wide",
         initial_sidebar_state="auto"
     )
 
@@ -190,26 +208,25 @@ def streamlit_app():
     st.header(f"Task *{task}*")
     view_col, edit_col = st.columns(2)
     with view_col:
-        save_col, delete_col = st.columns(2)
-        with save_col:
-            if st.button("Save Task"):
-                Loader().load_tasks_to_fs(target_profile, task)
-                st.success("Saved")
-        with delete_col:
-            if st.button("Delete"):
-                try:
-                    Loader().exclude_task(target_profile, task)
-                except FileNotFoundError:
-                    st.error("The task was not saved!")
-                    return
+        save_col, delete_col, _ = st.columns((1.5, 1, 7.5))
+        if save_col.button("Save Task", type="primary"):
+            Loader.load_tasks_to_fs(target_profile, task)
+            st.success("Saved")
+        if delete_col.button("Delete", type="secondary"):
+            try:
+                Loader.exclude_task(target_profile, task)
+            except FileNotFoundError:
+                st.error("The task was not saved!")
+                return
 
-                participant.remove_task(task)
-                st.rerun()
+            participant.remove_task(task)
+            st.rerun()
 
         st.json(task.to_json(), expanded=True)
 
     with edit_col:
         # Select the parameter to edit
+        st.subheader("Properties")
         prop = st.selectbox(
             label="Property", 
             options=task.keys(),
@@ -242,7 +259,41 @@ def streamlit_app():
 
             st.json(task.prop_to_json(prop))
     
-    prompt_viewer(target_profile, task)
+    #
+    #   Templates 
+    #
+
+    st.subheader("Templates")
+    template_file = st.file_uploader("Upload Template File", key=f"upload_{task.name}")
+    if template_file is not None:   # From submitted file
+        templates = Loader.load_templates_from_file(task, template_file)
+    else:                           # From FS loading
+        templates = load_templates(target_profile, task)
+    
+    # There is no templates available, so nothing more to do here...
+    if templates is None: return
+    
+    templates = settization(templates)
+
+    # Erases previous template data given room for newer
+    if template_file is not None:
+        if "template_id" in st.session_state:
+            for template in templates:
+                if template.id in st.session_state["template_id"]:
+                    del st.session_state["template_id"][template.id]
+
+    save_col, delete_col, _ = st.columns((.5, .5, 9))
+    if save_col.button("Save All", type="primary"):
+        Loader.load_templates_to_fs(target_profile, templates)
+
+    if delete_col.button("Delete All", type="secondary"):
+        Loader.exclude_templates(target_profile, task)
+        return
+
+    # Presents template one by one
+    for template in sorted(templates):
+        template_viewer(template)
+
 
 
 def main():

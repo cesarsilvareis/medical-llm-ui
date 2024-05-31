@@ -13,9 +13,9 @@ from resources.domain.task import MedicalTask
 
 
 class PublicTarget(ExtendedEnum):
-    PATIENT             = 0
-    NON_MEDICAL_STUDENT = 1
-    MEDICAL_STUDENT     = 2
+    NON_MEDICAL_STUDENT = 0
+    MEDICAL_STUDENT     = 1
+    PATIENT             = 2
     PHYSICIAN           = 3
 
 
