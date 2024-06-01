@@ -124,6 +124,9 @@ class MedicalTemplate:
             )
 
         return template.format(**self._task)
+    
+    def get_required_variables(self) -> list[str]:
+        return self._get_prompt_template().input_variables
 
     def __eq__(self, other: Self) -> bool:
         return self.id == other.id
