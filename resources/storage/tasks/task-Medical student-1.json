@@ -2,37 +2,50 @@
     "name": "IE Theoretical Slide Builder",
     "properties": [
         {
-            "name": "requirements",
-            "value": "1. The first slide has the presentation overview followed by a motivational slide representing the disease incidence in Portugal. 2. The last slide includes the presentation takeaways.",
-            "type": "str",
-            "required": true
-        },
-        {
-            "name": "#_slides",
+            "name": "number_of_slides",
             "value": 5,
             "type": "int",
             "required": true
         },
         {
-            "name": "selective_topics",
-            "value": "Portuguese epidemiology, etiology, detailed diagnosis and treatment, complications, and simple prophylaxis and prognosis.",
-            "type": "str",
-            "required": true
+            "name": "slide_length_in_#lines",
+            "value": 7,
+            "type": "int",
+            "required": false
         },
         {
-            "name": "student_academic_level",
+            "name": "medical_style",
+            "value": "correct use of medical terminology sustained with a rigorous and engaged tone",
+            "type": "str",
+            "required": false
+        },
+        {
+            "name": "student_level",
             "value": [
-                "Regular Medical Student",
-                "Advanced Medical Student"
+                "NON-MEDICAL_STUDENT",
+                "MEDICAL_STUDENT",
+                "ADVANCED_MEDICAL_STUDENT"
             ],
             "type": "list",
-            "required": true
+            "required": false
+        },
+        {
+            "name": "selective_topics",
+            "value": "(1) epidemiology in Portugal and etiology; (2) detailed diagnosis and treatment protocols; (3) risky complications; and (4) rudimentary prophylaxis and prognosis",
+            "type": "str",
+            "required": false
         },
         {
             "name": "slide_size_in_#words_per_slide",
             "value": 25,
             "type": "int",
             "required": true
+        },
+        {
+            "name": "extra_requirements",
+            "value": "(1)\u00a0The first slide has the presentation overview followed by a motivational slide representing the disease incidence in Portugal; (2) as the last slide, the presentation takeaways are present",
+            "type": "str",
+            "required": false
         }
     ]
 }

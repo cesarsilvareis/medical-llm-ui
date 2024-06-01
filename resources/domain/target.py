@@ -9,8 +9,6 @@
 
 from typing import Optional
 from resources.utils import ExtendedEnum, print_message
-from resources.domain.task import MedicalTask
-
 
 class PublicTarget(ExtendedEnum):
     NON_MEDICAL_STUDENT = 0
@@ -18,6 +16,7 @@ class PublicTarget(ExtendedEnum):
     PATIENT             = 2
     PHYSICIAN           = 3
 
+from resources.domain.task import MedicalTask
 
 class MedicalEndUser():
 

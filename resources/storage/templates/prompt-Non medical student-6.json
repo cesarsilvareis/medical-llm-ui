@@ -1,0 +1,8 @@
+{
+    "task": "IE Concept Explication in Text",
+    "iteration": "3",
+    "name": "Non-Medical Student Profile",
+    "score": 2,
+    "prompt": "Knowing that the intended reader of your response will be a\u00a0non-medical student and paying attention to its PROFILE and READING_STYLE provided below, describe what Infective Endocarditis disease is in less than 100 words.\n\n[ PROFILE ]\nA nurse, microbiologist, or cardio-pneumologist with descriptive yet simplified medical knowledge. Prevalence of curiosity about: (1) risk factors and causes; (2) essentials of the diagnosis and complications; and (3) generic treatment.\n\n[ READING_STYLE ]\nAbsence of overwhelming medical jargon and a simple, engaged tone.\n",
+    "template": "Knowing that the intended reader of your response will be a\u00a0non-medical student and paying attention to its PROFILE and READING_STYLE provided below, describe what Infective Endocarditis disease is in less than {length_in_#words} words.\n\n[ PROFILE ]\nA {non_minus_medical_pursuits} with descriptive yet simplified medical knowledge. Prevalence of curiosity about: {topics_in_list}.\n\n[ READING_STYLE ]\n{non_minus_medical_style}.\n"
+}

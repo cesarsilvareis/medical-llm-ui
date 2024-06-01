@@ -1,0 +1,8 @@
+{
+    "task": "IE Concept Explication in Text",
+    "iteration": "2",
+    "name": "Medical Style Expectations",
+    "score": 1,
+    "prompt": "Knowing that the intended reader of your response will be a medical student who expects the correct use of medical terminology sustained with a rigorous and engaged tone, explain what Infective Endocarditis disease is in less than 100 words.\n",
+    "template": "Knowing that the intended reader of your response will be a medical student who expects {medical_style}, explain what Infective Endocarditis disease is in less than {length_in_#words} words.\n"
+}

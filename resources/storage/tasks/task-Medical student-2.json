@@ -2,31 +2,37 @@
     "name": "IE Evaluation with Multi-Choice Questions",
     "properties": [
         {
-            "name": "academic_level",
-            "value": [
-                "Regular",
-                "Advanced"
-            ],
-            "type": "list",
-            "required": true
-        },
-        {
             "name": "evaluation_topics",
-            "value": "Portuguese epidemiology, etiology, detailed diagnosis and treatment, complications, and simple prophylaxis and prognosis",
+            "value": "(1) epidemiology in Portugal and etiology; (2) detailed diagnosis and treatment protocols; (3) risky complications; and (4) rudimentary prophylaxis and prognosis",
             "type": "str",
-            "required": true
+            "required": false
         },
         {
-            "name": "#_options",
+            "name": "number_of_options",
             "value": 4,
             "type": "int",
             "required": true
         },
         {
-            "name": "#_multiple_minus_choice_questions",
+            "name": "number_of_questions",
             "value": 5,
             "type": "int",
             "required": true
+        },
+        {
+            "name": "explanation_size_in_#words",
+            "value": 45,
+            "type": "int",
+            "required": true
+        },
+        {
+            "name": "student_level",
+            "value": [
+                "REGULAR_MEDICAL_STUDENT",
+                "ADVANCED_MEDICAL_STUDENT"
+            ],
+            "type": "list",
+            "required": false
         }
     ]
 }

@@ -56,7 +56,7 @@ class MedicalTemplate:
 
     @property
     def id(this) -> str:
-        return f"{this.task}/{this.iteration}"
+        return f"{this._task.id}/{this.iteration}"
     
     @property
     def name(this) -> str:

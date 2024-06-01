@@ -1,0 +1,8 @@
+{
+    "task": "IE Evaluation with Multi-Choice Questions",
+    "iteration": "2",
+    "name": "Formatted Sheet",
+    "score": 0,
+    "prompt": "Produce 5 multiple-choice questions (MCQs) with 4 options for assessing my medical students on what they have learned from Infective Endocarditis classes. All generated questions must have a unique correct answer, avoiding ambiguity and redundant alternatives. Additionally, write a small explanation (max. of 45 words) of the solution while you format the questions as follows (do not enclose in code \"```\"):\n\nMCQ format:\"\"\"\n---\n**{{question_number}}. {{question}}**\na) {{option_A}}\nb) {{option_B}}\nc) **{{option_C}}**\t# if option_C is the solution\nd) {{option_D}}\n\n**Explanation:** {{solution_explanation}}\n\n\"\"\"\n",
+    "template": "Produce {number_of_questions} multiple-choice questions with {number_of_options} options for assessing my medical students on what they have learned from Infective Endocarditis classes. All generated questions must have a unique correct answer indicated beneath it, avoiding ambiguity and redundant alternatives. Additionally, write a small explanation (max. of {explanation_size_in_#words} words) of the solution while you format the questions as follows (do not enclose in code \"```\"):\n\nMCQ format:\"\"\"\n---\n**{{question_number}}. {{question}}**\na) {{option_A}}\nb) {{option_B}}\nc) **{{option_C}}**\t# if option_C is the solution\nd) {{option_D}}\n\n**Explanation:** {{solution_explanation}}\n\n\"\"\"\n"
+}

@@ -8,16 +8,22 @@
             "required": true
         },
         {
-            "name": "topics_in_list",
-            "value": "(1) risk factors and causes; (2) essentials of the diagnosis and complications; and (3) generic treatment.",
+            "name": "non_minus_medical_style",
+            "value": "nurse, microbiologist; cardio-pneumologist",
             "type": "str",
             "required": false
         },
         {
-            "name": "area_of_interest_in_list",
-            "value": "nurse, microbiology, or cardio-pneumology",
+            "name": "non_minus_medical_pursuits",
+            "value": "no overwhelming medical terminology and a simple, engaged tone",
             "type": "str",
-            "required": true
+            "required": false
+        },
+        {
+            "name": "topics_in_list",
+            "value": "(1) risk factors and causes; (2) essentials of the diagnosis and complications; and (3) generic treatment.",
+            "type": "str",
+            "required": false
         }
     ]
 }

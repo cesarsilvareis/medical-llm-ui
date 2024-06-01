@@ -1,0 +1,8 @@
+{
+    "task": "IE Clinical Case Study Evaluation",
+    "iteration": "1",
+    "name": "Implicit Evaluation Setup",
+    "score": 0,
+    "prompt": "Prepare a simple\u00a0clinical case study evaluation\u00a0scheme for tomorrow's practical lesson, such that I can effectively assess my\u00a0medical students on what they have learned about Infective Endocarditis from previous lectures.\n\nJust respond with the statement sheet, where questions are present.\n",
+    "template": "Prepare a simple\u00a0clinical case study evaluation\u00a0scheme for tomorrow's practical lesson, such that I can effectively assess my\u00a0medical students on what they have learned about Infective Endocarditis from previous lectures.\n\nJust respond with the statement sheet, where questions are present.\n"
+}

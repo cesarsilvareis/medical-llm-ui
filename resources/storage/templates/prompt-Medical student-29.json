@@ -1,0 +1,8 @@
+{
+    "task": "IE Evaluation with Open-Ended Questions",
+    "iteration": "1",
+    "name": "Ambitious Demand",
+    "score": 0,
+    "prompt": "Assess my\u00a0medical students\u00a0by making\u00a03\u00a0open-ended questions covering what they have learned about Infective Endocarditis in class.\n\nJust output the questions for now.\n",
+    "template": "Assess my\u00a0medical students\u00a0by making\u00a0{number_of_questions}\u00a0open-ended questions covering what they have learned about Infective Endocarditis in class.\n\nJust output the questions for now.\n"
+}

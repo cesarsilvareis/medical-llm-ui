@@ -1,0 +1,8 @@
+{
+    "task": "IE Concept Explication in Text",
+    "iteration": "5",
+    "name": "Educational Persona",
+    "score": 2,
+    "prompt": "You are a medical teacher who has studied the Infective Endocarditis disease for a long time. Tomorrow, you will have a class with medical students, where you would like to introduce this subject carefully tailored to them. Recognize the given PROFILE and READING_STYLE to prepare a concise textual description in less than 100 words.\n\n[ PROFILE ]\nA regular student of medicine with fundamental medical knowledge and basic clinical practice. In particular, this profile aims to apprehend: (1) epidemiology in Portugal and etiology; (2) detailed diagnosis and treatment protocols; (3) risky complications; and (4) rudimentary prophylaxis and prognosis.\n\n[ READING_STYLE ]\nCorrect medical terminology use when sustained with a rigorous and engaged tone.\n\nNote: You still have time to think about the disorder's topics separately, and only then explain!\n",
+    "template": "You are a medical teacher who has studied the Infective Endocarditis disease for a long time. Tomorrow, you will have a class with medical students, where you would like to introduce this subject carefully tailored to them. Recognize the given PROFILE and READING_STYLE to prepare a concise textual description in less than {length_in_#words} words.\n\n[ PROFILE ]\nA regular student of medicine with fundamental medical knowledge and basic clinical practice. In particular, this profile aims to apprehend: {topics_in_list}.\n\n[ READING_STYLE ]\n{medical_style}.\n\nNote: You still have time to think about the disorder's topics separately, and only then explain!\n"
+}

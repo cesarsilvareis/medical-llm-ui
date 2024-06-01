@@ -2,24 +2,30 @@
     "name": "IE Evaluation with Open-Ended Questions",
     "properties": [
         {
-            "name": "answer_detail_level_in_#words",
-            "value": 50,
+            "name": "evaluation_topics",
+            "value": "(1) epidemiology in Portugal and etiology; (2) detailed diagnosis and treatment protocols; (3) risky complications; and (4) rudimentary prophylaxis and prognosis",
+            "type": "str",
+            "required": false
+        },
+        {
+            "name": "number_of_questions",
+            "value": 3,
             "type": "int",
             "required": true
         },
         {
-            "name": "evaluation_topics",
-            "value": "Portuguese epidemiology, etiology, detailed diagnosis and treatment, complications, and simple prophylaxis and prognosis",
-            "type": "str",
-            "required": true
-        },
-        {
-            "name": "academic_level",
+            "name": "student_level",
             "value": [
-                "Regular",
-                "Advanced"
+                "REGULAR_MEDICAL_STUDENT",
+                "ADVANCED_MEDICAL_STUDENT"
             ],
             "type": "list",
+            "required": false
+        },
+        {
+            "name": "answer_detail_level_in_#words",
+            "value": 55,
+            "type": "int",
             "required": true
         }
     ]

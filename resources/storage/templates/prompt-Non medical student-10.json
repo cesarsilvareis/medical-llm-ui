@@ -1,0 +1,8 @@
+{
+    "task": "IE Theoretical Slide Builder",
+    "iteration": "2",
+    "name": "Slide Format",
+    "score": 0,
+    "prompt": "Elaborate 5 theoretical slides where you show the Infective Endocarditis disease to non-medical students. Your generation should respect the structure as follows (do not enclose in code \"```\"):\n\nSlide format:\"\"\"\n---\n**Slide {{slide_number}}: {{slide_title}}**\n{{slide_body}}\n\"\"\"\n\n### Notes ###\n- All slide bodies have at most 25 words.\n- Use bullet-list form as the main textual element type.\n",
+    "template": "Elaborate {#_slides} theoretical slides with {slide_size_in_#words_per_slide} words at most each, where you show the Infective Endocarditis disease to non-medical students. Your generation should respect the structure as follows (do not enclose in code \"```\"):\n\nSlide format: \"\"\"\n---\n**Slide {{slide_number}}: {{slide_title}}**\n{{slide_body}}\n\"\"\"\n\n### Notes ###\n- All slide bodies have at most 25 words.\n- Use bullet-list form as the main textual element type.\n"
+}

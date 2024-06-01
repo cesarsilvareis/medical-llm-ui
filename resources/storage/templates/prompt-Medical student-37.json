@@ -1,0 +1,8 @@
+{
+    "task": "IE Clinical Case Study Evaluation",
+    "iteration": "2",
+    "name": "Consistent Evaluation Setup",
+    "score": 0,
+    "prompt": "Prepare a simple\u00a0clinical case study evaluation\u00a0scheme for tomorrow's practical lesson, such that I can effectively assess my\u00a0medical students on what they have learned about Infective Endocarditis from previous lectures. Please, adopt the following output format when creating the statement sheet with questions associated with medical topics (do not enclose in code \"```\").\n\nStatement Sheet:\"\"\"\n**I. Case Scenario:**\n{{clinical_case}}\n\n**II. Instructions:**\n1. {{test_instruction1}}\t\n2. ...\n\n**III. Questions:**\n\n{{test_questions}}\n\n**IV. Additional Notes:**\n- Duration time: {{test_duration}}\n- ...\n\"\"\"\n\nTopic-grouped questions: \"\"\"\n*{{topic_letter}}. {{topic}}:*\n\nQ{{question_number}}. {{question}}\n...\n\"\"\"\n",
+    "template": "Prepare a simple\u00a0clinical case study evaluation\u00a0scheme for tomorrow's practical lesson, such that I can effectively assess my\u00a0medical students on what they have learned about Infective Endocarditis from previous lectures. Please, adopt the following output format when creating the statement sheet with questions associated with medical topics (do not enclose in code \"```\").\n\nStatement Sheet:\"\"\"\n**I. Case Scenario:**\n{{clinical_case}}\n\n**II. Instructions:**\n1. {{test_instruction1}}\t\n2. ...\n\n**III. Questions:**\n\n{{test_questions}}\n\n**IV. Additional Notes:**\n- Duration time: {{test_duration}}\n- ...\n\"\"\"\n\nTopic-grouped questions: \"\"\"\n*{{topic_letter}}. {{topic}}:*\n\nQ{{question_number}}. {{question}}\n...\n\"\"\"\n"
+}

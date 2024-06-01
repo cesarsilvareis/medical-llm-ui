@@ -2,10 +2,22 @@
     "name": "IE Concept Explication in Informative Flyers",
     "properties": [
         {
-            "name": "page_size_in_#word_per_page",
-            "value": 75,
+            "name": "visuals_per_page",
+            "value": 1,
             "type": "int",
             "required": true
+        },
+        {
+            "name": "topics_per_page",
+            "value": 2,
+            "type": "int",
+            "required": true
+        },
+        {
+            "name": "patient_profile_in_considerations",
+            "value": "(1) medical Jargon avoidance; (2) harmless and accessible tone; (3) unaware of complications, symptoms, and prevention; (4) interest in lifestyle habits and nutrition",
+            "type": "str",
+            "required": false
         },
         {
             "name": "target_language_in_nationality",
@@ -15,6 +27,12 @@
                 "French"
             ],
             "type": "list",
+            "required": true
+        },
+        {
+            "name": "text_complexity_in_#words_per_remark",
+            "value": 20,
+            "type": "int",
             "required": true
         }
     ]

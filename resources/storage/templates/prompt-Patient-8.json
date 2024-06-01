@@ -1,0 +1,8 @@
+{
+    "task": "IE Concept Explication in Informative Flyers",
+    "iteration": "1",
+    "name": "Explicit Number of Pages",
+    "score": 0,
+    "prompt": "What is Infective Endocarditis? Create an informative\u00a0double-sided tri-fold brochure\u00a0explaining the illness to\u00a0patients. As a hint, this format will require\u00a06 pages in total,\u00a0heading as below.\u00a0Please\u00a0ensure you write the paper\u00a0in\u00a0European Portuguese,\u00a0in which\u00a0paragraphs\u00a0are\u00a0limited to 20 words.\n\nPage header:\"\"\"\n---\n***P\u00e1gina {{page_number}}***\n\"\"\"\n",
+    "template": "What is Infective Endocarditis? Create an informative\u00a0double-sided tri-fold brochure\u00a0explaining the illness to\u00a0patients. As a hint, this format will require\u00a06 pages in total,\u00a0heading as below.\u00a0Please\u00a0ensure you write the paper\u00a0in\u00a0European Portuguese,\u00a0in which\u00a0paragraphs\u00a0are\u00a0limited to 20 words.\n\nPage header:\"\"\"\n---\n***P\u00e1gina {{page_number}}***\n\"\"\"\n"
+}

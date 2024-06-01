@@ -1,0 +1,8 @@
+{
+    "task": "IE Concept Explication in Text",
+    "iteration": "2",
+    "name": "Non-Medical Style Expectations",
+    "score": 2,
+    "prompt": "Knowing that the intended reader of your response will be a NON-MEDICAL_STUDENT who expects no overwhelming medical terminology and a simple, engaged tone, describe what Infective Endocarditis disease is in less than 100 words.\n\nNON-MEDICAL_STUDENT = {{ nurses, microbiologists, cardio-pneumologists }}\n",
+    "template": "Knowing that the intended reader of your response will be a NON-MEDICAL_STUDENT who expects {non_minus_medical_style}, describe what Infective Endocarditis disease is in less than {length_in_#words} words.\n\nNON-MEDICAL_STUDENT = {{ {non_minus_medical_pursuits} }}\n"
+}

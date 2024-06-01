@@ -1,0 +1,8 @@
+{
+    "task": "IE Theoretical Slide Builder",
+    "iteration": "3",
+    "name": "Slide Body Details",
+    "score": 0,
+    "prompt": "Elaborate 5 theoretical slides where you show the Infective Endocarditis disease to non-medical students. Your generation should respect the structure as follows (do not enclose in code \"```\"):\n\nSlide format:\"\"\"\n---\n**Slide {{slide_number}}: {{slide_title}}**\n{{slide_body}}\n\"\"\"\n\n### Body Restrictions ###\n- Every slide_body has at most 25 words in total.\n- Use bullet-list form as the primary textual element type.\n- As pedagogical presentations seek attention and conveyance clarity beyond text, you are free to detail further any slide_body using the given structural elements (not counting to the word limit):\n   - Images: \"\"\" **<img>** {{image_caption}} **</img>** \"\"\"\n   - Tables: \"\"\" **<tab>** {{var1}}/{{var2}} **</tab>** \"\"\"\n",
+    "template": "Elaborate {#_slides} theoretical slides where you show the Infective Endocarditis disease to non-medical students. Your generation should respect the structure as follows (do not enclose in code \"```\"):\n\nSlide format: \"\"\"\n---\n**Slide {{slide_number}}: {{slide_title}}**\n{{slide_body}}\n\"\"\"\n\n### Body Restrictions ###\n- Every slide_body has at most {slide_size_in_#words_per_slide} words in total.\n- Use bullet-list form as the primary textual element type.\n- As pedagogical presentations seek attention and conveyance clarity beyond text, you are free to detail further any slide_body using the given structural elements (not counting to the word limit):\n   - Images: \"\"\" **<img>** {{image_caption}} **</img>** \"\"\"\n   - Tables: \"\"\" **<tab>** {{var1}}/{{var2}} **</tab>** \"\"\"\n"
+}

@@ -26,7 +26,7 @@ def load_participant(target: PublicTarget) -> MedicalEndUser:
 def load_templates_from_fs(target: PublicTarget, task: MedicalTask) -> MedicalTemplate|set[MedicalTemplate]|None:
     return Loader.load_templates_from_fs(target, task)
 
-@st.cache_resource(hash_funcs={MedicalTask: MedicalTask.__hash__, UploadedFile: lambda f: f.name})
+@st.cache_resource(hash_funcs={MedicalTask: MedicalTask.__hash__, UploadedFile: lambda f: f.file_id})
 def load_templates_from_file(task: MedicalTask, file: UploadedFile) -> MedicalTemplate|set[MedicalTemplate]|None:
     return Loader.load_templates_from_file(task, file)
 

@@ -3,18 +3,30 @@
     "properties": [
         {
             "name": "evaluation_topics",
-            "value": "Portuguese epidemiology, etiology, detailed diagnosis and treatment, complications, and simple prophylaxis and prognosis",
+            "value": "(1) epidemiology in Portugal and etiology; (2) detailed diagnosis and treatment protocols; (3) risky complications; and (4) rudimentary prophylaxis and prognosis",
             "type": "str",
+            "required": false
+        },
+        {
+            "name": "number_of_topics",
+            "value": 5,
+            "type": "int",
             "required": true
         },
         {
-            "name": "academic_level",
+            "name": "number_of_questions",
+            "value": 12,
+            "type": "int",
+            "required": true
+        },
+        {
+            "name": "student_level",
             "value": [
-                "Regular",
-                "Advanced"
+                "REGULAR_MEDICAL_STUDENT",
+                "ADVANCED_MEDICAL_STUDENT"
             ],
             "type": "list",
-            "required": true
+            "required": false
         }
     ]
 }

@@ -2,6 +2,22 @@
     "name": "IE Concept Explication in Text",
     "properties": [
         {
+            "name": "medical_style",
+            "value": "correct use of medical terminology sustained with a rigorous and engaged tone",
+            "type": "str",
+            "required": false
+        },
+        {
+            "name": "student_level",
+            "value": [
+                "NON-MEDICAL_STUDENT",
+                "MEDICAL_STUDENT",
+                "ADVANCED_MEDICAL_STUDENT"
+            ],
+            "type": "list",
+            "required": false
+        },
+        {
             "name": "length_in_#words",
             "value": 100,
             "type": "int",
@@ -9,9 +25,9 @@
         },
         {
             "name": "topics_in_list",
-            "value": "Portuguese epidemiology, etiology, detailed diagnosis and treatment, complications, and simple prophylaxis and prognosis",
+            "value": "(1) epidemiology in Portugal and etiology; (2) detailed diagnosis and treatment protocols; (3) risky complications; and (4) rudimentary prophylaxis and prognosis",
             "type": "str",
-            "required": true
+            "required": false
         }
     ]
 }

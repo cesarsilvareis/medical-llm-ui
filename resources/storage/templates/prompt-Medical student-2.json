@@ -1,0 +1,8 @@
+{
+    "task": "IE Concept Explication in Text",
+    "iteration": "4",
+    "name": "Time to Think",
+    "score": 2,
+    "prompt": "Knowing that the intended reader of your response will be a\u00a0medical student and paying attention to its PROFILE and READING_STYLE, describe what Infective Endocarditis disease is in less than 100 words. \n\n[ PROFILE ]\nA regular student of medicine with fundamental medical knowledge and basic clinical practice. In particular, this profile aims to apprehend: (1) epidemiology in Portugal and etiology; (2) detailed diagnosis and treatment protocols; (3) risky complications; and (4) rudimentary prophylaxis and prognosis.\n\n[ READING_STYLE ]\nCorrect medical terminology use when sustained with a rigorous and engaged tone.\n\nNote: Take your time to think about the disorder's topics separately, and only then write the explanation!\n",
+    "template": "Knowing that the intended reader of your response will be a\u00a0medical student and paying attention to its PROFILE and READING_STYLE, describe what Infective Endocarditis disease is in less than {length_in_#words} words.\n\n[ PROFILE ]\nA regular student of medicine with fundamental medical knowledge and basic clinical practice. In particular, this profile aims to apprehend: {topics_in_list}.\n\n[ READING_STYLE ]\n{medical_style}.\n\nNote: Take your time to think about the disorder's topics separately, and only then write the explanation!\n"
+}

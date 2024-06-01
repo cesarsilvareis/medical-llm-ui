@@ -1,0 +1,8 @@
+{
+    "task": "IE Evaluation with Open-Ended Questions",
+    "iteration": "2",
+    "name": "Formatted Sheet",
+    "score": 0,
+    "prompt": "Assess my\u00a0medical students\u00a0by making\u00a03\u00a0open-ended questions (OEQ) covering what they have learned about Infective Endocarditis in class. Follow the OEQ format given below, where each is complemented with a concise and well-founded example answer.\n\nOutput format:\"\"\"\n**Q{{question_number}}. {{question}}**\n\n*Example Answer:*\n\n{{standard_response}}\n\n\"\"\"\n",
+    "template": "Assess my\u00a0medical students\u00a0by making\u00a0{number_of_questions} open-ended questions (OEQ) covering what they have learned about Infective Endocarditis in class. Follow the OEQ format given below, where each is complemented with a concise and well-founded example answer.\n\nOutput format:\"\"\"\n**Q{{question_number}}. {{question}}**\n\n*Example Answer:*\n\n{{standard_response}}\n\n\"\"\"\n"
+}

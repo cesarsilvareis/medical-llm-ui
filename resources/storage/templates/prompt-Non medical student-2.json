@@ -1,0 +1,8 @@
+{
+    "task": "IE Concept Explication in Text",
+    "iteration": "1",
+    "name": "Explicit Non-Medical Pursuits",
+    "score": 1,
+    "prompt": "For the question: \"\"\" What is Infective Endocarditis? \"\"\" write a concise text description of the disease in less than 100 words for a NON-MEDICAL_STUDENT reader. \n\nNON-MEDICAL_STUDENT = {{ nurses, microbiologists, cardio-pneumologists }}\n",
+    "template": "For the question: \"\"\" What is Infective Endocarditis? \"\"\" write a concise text description of the disease in less than {length_in_#words} words for a NON-MEDICAL_STUDENT reader. \n\nNON-MEDICAL_STUDENT = {{ {non_minus_medical_pursuits} }}\n"
+}

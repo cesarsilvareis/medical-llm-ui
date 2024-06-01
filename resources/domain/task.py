@@ -12,6 +12,7 @@ import json
 from collections.abc import MutableMapping
 from typing import Iterator, Optional, Type, Self
 
+from resources.domain.target import PublicTarget
 from resources.utils import *
 
 class Property:
@@ -43,6 +44,9 @@ class Property:
         return self._value is not None
 
     def set_value(self, value, required: bool|None=None):
+        if required is not None:
+            self._required = required
+
         if type(value) != self._type:
             if self._type is list:
                 self._value.remove(value)
@@ -52,8 +56,6 @@ class Property:
             print_message(f"The type of the given value differs from the property type", "error", TypeError)
 
         self._value = value
-        if required is not None:
-            self._required = required
 
         if self._default_value is not None:
             return
@@ -115,8 +117,9 @@ class Property:
 
 class MedicalTask(MutableMapping):
 
-    def __init__(self, name: str, **required_inputs):
+    def __init__(self, name: str, target: PublicTarget, **required_inputs):
         self._name = name # unique for a target
+        self._target = target
 
         self._req = False
         self._properties: set[Property] = set()
@@ -127,8 +130,16 @@ class MedicalTask(MutableMapping):
             self.to_detailed()
 
     @property
-    def name(this):
+    def id(this) -> str:
+        return f"{this.name} -> {this.target}"
+
+    @property
+    def name(this) -> str:
         return this._name
+    
+    @property
+    def target(this) -> PublicTarget:
+        return this._target
 
     def _find_property(self, name: str) -> Optional[Property]:
         return next((p for p in self._properties if p.info[0] == name), None) # why is python using 'next' for sets???
@@ -220,12 +231,12 @@ class MedicalTask(MutableMapping):
             json.dump(self.to_json(), fp, indent=4, sort_keys=False)
     
     @classmethod
-    def load(cls, saved_file: str) -> 'MedicalTask':
+    def load(cls, target: PublicTarget, saved_file: str) -> 'MedicalTask':
         with open(f"{saved_file}", 'r') as fp:
             json_data: dict = json.load(fp)
         assert all(attr in json_data for attr in ["name", "properties"])
         
-        dummy = cls(name=json_data["name"])
+        dummy = cls(name=json_data["name"], target=target)
         properties = list(Property.from_json(prop_data) for prop_data in json_data["properties"])
         for prop in properties:
             if prop.required:

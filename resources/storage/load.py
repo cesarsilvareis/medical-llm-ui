@@ -94,7 +94,7 @@ class Loader:
     @staticmethod
     def load_tasks_from_fs(target: PublicTarget) -> Optional[Union[MedicalTask, set[MedicalTask]]]:
         task_files = Loader._get_all_target_files(target=target, mode=LoadMode.TASK)
-        load_tasks = { MedicalTask.load(Loader._get_related_file_path(f, mode=LoadMode.TASK)) for f in task_files }
+        load_tasks = { MedicalTask.load(target, Loader._get_related_file_path(f, mode=LoadMode.TASK)) for f in task_files }
 
         return set_optional_return(load_tasks) 
 

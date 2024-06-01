@@ -1,0 +1,8 @@
+{
+    "task": "IE Evaluation with Multi-Choice Questions",
+    "iteration": "1",
+    "name": "Possible Answering Exercise",
+    "score": 0,
+    "prompt": "Produce 5 multiple-choice questions with 4 options for assessing my medical students on what they have learned from Infective Endocarditis classes. All generated questions must have a unique correct answer indicated beneath it, avoiding ambiguity and redundant alternatives.\n",
+    "template": "Produce {number_of_questions} multiple-choice questions with {number_of_options} options for assessing my medical students on what they have learned from Infective Endocarditis classes. All generated questions must have a unique correct answer indicated beneath it, avoiding ambiguity and redundant alternatives.\n"
+}
